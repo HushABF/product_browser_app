@@ -51,29 +51,77 @@ dependencies:
 
 ---
 
+## Folder Structure
+
+```
+lib/
+  core/
+    di/
+      service_locator.dart
+    errors/
+      failures.dart
+    network/
+      dio_client.dart
+    routes/
+      app_router.dart
+    widgets/
+      cart_badge_button.dart
+      error_view.dart
+  features/
+    category/
+      data/
+        category_model.dart
+        category_repository.dart
+      cubit/
+        category_cubit.dart
+        category_state.dart
+      screens/
+        category_list_screen.dart
+        widgets/
+          category_card.dart
+    product/
+      data/
+        product_model.dart
+        product_repository.dart
+      bloc/
+        product_bloc.dart
+        product_event.dart
+        product_state.dart
+      screens/
+        product_list_screen.dart
+        product_detail_screen.dart
+        widgets/
+          product_card.dart
+    cart/
+      data/
+        cart_repository.dart       ← optional (Phase 8d)
+      cubit/
+        cart_cubit.dart
+        cart_state.dart
+      screens/
+        cart_screen.dart
+```
+
+---
+
 ## Git Branch Strategy
 
 ```
-main          ← for simplicity, push directly to main
-feature/*     ← one branch per phase
+main          ← merge PRs in order
+feature/*     ← one branch per phase, each built on top of the previous
 ```
 
-**PR flow:** `feature/* → main` per phase.
+**PR flow:** `feature/* → main` per phase, merged in order.
 
 **Branches:**
 ```
-feature/project-setup
-feature/core-layer
-feature/data-models
-feature/repository-layer
-feature/category-cubit
-feature/product-bloc
-feature/cart-cubit
-feature/category-screen
-feature/product-list-screen
-feature/product-detail-screen
-feature/cart-screen
-feature/polish
+feature/project-setup     ← Phase 1
+feature/core-layer        ← Phase 2
+feature/data-layer        ← Phase 3 (models + repositories for all features)
+feature/category-feature  ← Phase 4 (CategoryCubit + Category screen)
+feature/product-feature   ← Phase 5 (ProductBloc + Product screens)
+feature/cart-feature      ← Phase 6 (CartCubit + Cart screen)
+feature/polish            ← Phase 7
 ```
 
 ---
@@ -85,7 +133,7 @@ feature/polish
 ### Files to create/modify
 - `pubspec.yaml` — add all 9 packages
 - `lib/core/di/service_locator.dart` — `setupLocator()` registering `DioClient` and `ProductRepository` as lazy singletons
-- `lib/core/routes/app_router.dart` — `GoRouter` instance with 4 routes, placeholder screens
+- `lib/core/routes/app_router.dart` — `GoRouter` instance with 4 named routes, placeholder screens
 - `lib/main.dart` — replace counter demo; call `setupLocator()` in `main()`; `ProductBrowserApp` with M3 theme, `MultiBlocProvider` (CartCubit), `MaterialApp.router`
 - `lib/features/category/screens/category_list_screen.dart` — placeholder
 - `lib/features/product/screens/product_list_screen.dart` — placeholder
@@ -102,7 +150,7 @@ feature/polish
 - `lib/core/errors/failures.dart`
   - Sealed base class `Failure extends Equatable`
   - `NetworkTimeoutFailure` → `'Connection timed out. Please check your internet.'`
-  - `ServerFailure({int? statusCode})` → `'Something went wrong on our end. Try again later.'`
+  - `ServerFailure({int? statusCode})` with `fromStatusCode` factory for per-status messages
   - `NetworkFailure(String message)` — general catch-all
 
 - `lib/core/network/dio_client.dart`
@@ -113,25 +161,18 @@ feature/polish
 
 ---
 
-## Phase 3 — Data Models
-> **Branch:** `feature/data-models`
-> **Teaches:** `fromJson` factory constructors, `Equatable` value equality, safe JSON casting
+## Phase 3 — Data Layer (Models + Repositories)
+> **Branch:** `feature/data-layer`
+> **Teaches:** `fromJson` factory constructors, `Equatable` value equality, Repository pattern, `Either<Failure, T>` return types
 
 ### Files to create
 - `lib/features/category/data/category_model.dart`
   - `Category(slug, name, url)` with `fromJson` factory
 
-- `lib/features/product/models/product_model.dart`
+- `lib/features/product/data/product_model.dart`
   - `Product(id, title, description, price, rating, stock, thumbnail, images)`
   - ⚠️ `(json['price'] as num).toDouble()` — DummyJSON sometimes returns integer prices
 
----
-
-## Phase 4 — Repository Layer
-> **Branch:** `feature/repository-layer`
-> **Teaches:** Repository pattern, `Either<Failure, T>` return types, isolating Dio from state management
-
-### Files to create
 - `lib/features/product/data/product_repository.dart`
   - `ProductRepository(DioClient _dioClient)`
   - `Future<Either<Failure, List<Category>>> fetchCategories()`
@@ -150,18 +191,24 @@ feature/polish
     ```
   - **The only file that imports Dio. Cubit/Bloc never touch Dio directly.**
 
+- Update `lib/core/di/service_locator.dart` — register `ProductRepository` as lazy singleton
+
 ---
 
-## Phase 5 — State Management Layer
+## Phase 4 — Category Feature (Cubit + Screen)
+> **Branch:** `feature/category-feature`
+> **Teaches:** Cubit anatomy, `Either.fold()` in state management, BlocBuilder, GridView
 
-### 5a — CategoryCubit
-> **Branch:** `feature/category-cubit`
-> **Teaches:** Cubit anatomy, `Either.fold()` in state management
-
+### Files to create
 ```
 lib/features/category/cubit/
   category_state.dart   → sealed: CategoryInitial | CategoryLoading | CategorySuccess(List<Category>) | CategoryError(String)
   category_cubit.dart   → fetchCategories() — emits loading → calls repo → folds Either → emits success or error
+
+lib/features/category/screens/
+  widgets/
+    category_card.dart
+  category_list_screen.dart
 ```
 
 ```dart
@@ -175,10 +222,25 @@ Future<void> fetchCategories() async {
 }
 ```
 
-### 5b — ProductBloc
-> **Branch:** `feature/product-bloc`
-> **Teaches:** Bloc with inter-event shared state, why `_allProducts` requires Bloc not Cubit
+**Screen:**
+- `BlocProvider<CategoryCubit>` at screen root, calls `fetchCategories()` on create
+- `BlocBuilder` with Dart 3 `switch` on sealed state
+- `GridView.builder` (crossAxisCount: 2, childAspectRatio: 1.4) for success state
+- `CircularProgressIndicator` for loading, `ErrorView` for error
+- On tap: `context.pushNamed('productList', pathParameters: {'categorySlug': category.slug})`
+- AppBar includes `CartBadgeButton`
 
+**Shared widgets (create before screen):**
+- `lib/core/widgets/cart_badge_button.dart`
+- `lib/core/widgets/error_view.dart`
+
+---
+
+## Phase 5 — Product Feature (Bloc + Screens)
+> **Branch:** `feature/product-feature`
+> **Teaches:** Bloc with inter-event shared state, why `_allProducts` requires Bloc not Cubit, search filtering
+
+### Files to create
 ```
 lib/features/product/bloc/
   product_event.dart    → FetchProductsByCategory(String slug), SearchProducts(String query)
@@ -186,98 +248,58 @@ lib/features/product/bloc/
   product_bloc.dart     → holds List<Product> _allProducts
                           FetchProductsByCategory: hits API, stores in _allProducts, emits success
                           SearchProducts: filters _allProducts locally, emits success (no loading state)
+
+lib/features/product/screens/
+  widgets/
+    product_card.dart
+  product_list_screen.dart
+  product_detail_screen.dart
 ```
 
-### 5c — CartCubit
-> **Branch:** `feature/cart-cubit`
-> **Teaches:** Immutable state updates, root-scoped Cubit
+**Product List Screen:**
+- Receives `categorySlug` from go_router path param
+- `BlocProvider<ProductBloc>`, fires `FetchProductsByCategory(slug)` on create
+- `TextField` search bar → `onChanged` dispatches `SearchProducts(query)`
+- `BlocBuilder` for 2-col `GridView`; empty list shows `'No products found'`
+- On tap: `context.pushNamed('productDetail', pathParameters: {...}, extra: product)`
+- AppBar includes `CartBadgeButton`
 
+**Product Detail Screen:**
+- Receives `Product` via go_router `extra`
+- No local Bloc/Cubit — reads root `CartCubit` only
+- `CustomScrollView` + `SliverAppBar` with first image from `product.images`
+- Cart button via `BlocBuilder<CartCubit, CartState>` — toggles Add/Remove
+- AppBar includes `CartBadgeButton`
+
+---
+
+## Phase 6 — Cart Feature (Cubit + Screen)
+> **Branch:** `feature/cart-feature`
+> **Teaches:** Immutable state updates, root-scoped Cubit, surviving navigation
+
+### Files to create
 ```
 lib/features/cart/cubit/
-  cart_state.dart       → single CartState(List<Product> items) — NOT sealed (no loading/error for cart)
+  cart_state.dart       → single CartState(List<Product> items) — NOT sealed
                           getters: double totalPrice, int itemCount
   cart_cubit.dart       → addToCart(Product) / removeFromCart(int productId)
                           always emit new CartState with new list — never mutate state.items
+
+lib/features/cart/screens/
+  cart_screen.dart
 ```
 
-Update `lib/main.dart` to provide `CartCubit` at root:
+**Screen:**
+- Reads root `CartCubit` — no local `BlocProvider`
+- Empty state: cart icon + `'Your cart is empty'`
+- `ListView.builder` with thumbnail, title, price, delete `IconButton`
+- Bottom: `'Total: $formatted'` price display
+
+Update `lib/main.dart`:
 ```dart
 MultiBlocProvider(
   providers: [BlocProvider<CartCubit>(create: (_) => CartCubit())],
   child: MaterialApp.router(...),
-)
-```
-
----
-
-## Phase 6 — UI Layer (Screen by Screen)
-> **Teaches:** `BlocProvider`, `BlocBuilder`, `context.read`, widget extraction, `CachedNetworkImage`, go_router navigation
-
-### Shared widgets (create in this phase before screens)
-- `lib/core/widgets/cart_badge_button.dart` — `BlocBuilder<CartCubit, CartState>` + `Badge` + cart `IconButton` → reused in every AppBar
-- `lib/core/widgets/error_view.dart` — error icon + message + `FilledButton.tonal('Retry', onPressed: onRetry)` → reused in all error states
-
-### 6a — Category List Screen
-> **Branch:** `feature/category-screen`
-
-`lib/features/category/screens/category_list_screen.dart`
-- `BlocProvider<CategoryCubit>` at screen root, calls `fetchCategories()` on create
-- `BlocBuilder` with Dart 3 `switch` on sealed state
-- `GridView.builder` (crossAxisCount: 2, childAspectRatio: 1.4) for success state
-- `CircularProgressIndicator` for loading, `ErrorView` for error
-- Extract: `lib/features/category/screens/widgets/category_card.dart`
-- On tap: `context.push('/products/${category.slug}')`
-- AppBar includes `CartBadgeButton`
-
-### 6b — Product List Screen
-> **Branch:** `feature/product-list-screen`
-
-`lib/features/product/screens/product_list_screen.dart`
-- Receives `categorySlug` from go_router path param
-- `BlocProvider<ProductBloc>`, fires `FetchProductsByCategory(slug)` on create
-- `TextField` search bar at top → `onChanged` dispatches `SearchProducts(query)`
-- `BlocBuilder` for 2-col `GridView`; empty list inside `ProductSuccess` shows `'No products found'`
-- Extract: `lib/features/product/screens/widgets/product_card.dart`
-- On tap: `context.push('/products/$slug/${product.id}', extra: product)`
-- AppBar includes `CartBadgeButton`
-
-### 6c — Product Detail Screen
-> **Branch:** `feature/product-detail-screen`
-
-`lib/features/product/screens/product_detail_screen.dart`
-- Receives `Product` via go_router `extra`
-- **No local Bloc/Cubit** — reads root `CartCubit` only
-- `CustomScrollView` + `SliverAppBar` (expandable, pinned) with first image from `product.images`
-- Body: title, price (formatted), rating, stock indicator, description
-- Cart button via `BlocBuilder<CartCubit, CartState>`:
-  ```dart
-  final isInCart = cartState.items.any((p) => p.id == product.id);
-  // 'Add to Cart' or 'Remove from Cart'
-  ```
-- AppBar includes `CartBadgeButton`
-
-### 6d — Cart Screen
-> **Branch:** `feature/cart-screen`
-
-`lib/features/cart/screens/cart_screen.dart`
-- Reads root `CartCubit` — no local `BlocProvider` needed
-- Empty state: cart icon + `'Your cart is empty'` + back button
-- Item list: `ListView.builder` with thumbnail, title, price, delete `IconButton`
-- Bottom: `'Total: $formatted'` price display
-
-### CachedNetworkImage pattern (use everywhere)
-```dart
-CachedNetworkImage(
-  imageUrl: url,
-  fit: BoxFit.cover,
-  placeholder: (_, __) => Container(
-    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-    child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-  ),
-  errorWidget: (_, __, ___) => Container(
-    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-    child: const Icon(Icons.broken_image),
-  ),
 )
 ```
 
@@ -309,50 +331,20 @@ Add `CartRepository` in `lib/features/cart/data/cart_repository.dart`. Add `toJs
 
 ---
 
-## File Creation Order (strict dependency order)
-
-```
-Phase 1 (feature/project-setup):
-  pubspec.yaml
-  lib/core/di/service_locator.dart
-  lib/core/routes/app_router.dart
-  lib/main.dart
-  lib/features/*/screens/*_screen.dart  ← 4 placeholders
-
-Phase 2 (feature/core-layer):
-  lib/core/errors/failures.dart
-  lib/core/network/dio_client.dart
-
-Phase 3 (feature/data-models):
-  lib/features/category/data/category_model.dart
-  lib/features/product/models/product_model.dart
-
-Phase 4 (feature/repository-layer):
-  lib/features/product/data/product_repository.dart
-
-Phase 5a (feature/category-cubit):
-  lib/features/category/cubit/category_state.dart
-  lib/features/category/cubit/category_cubit.dart
-
-Phase 5b (feature/product-bloc):
-  lib/features/product/bloc/product_event.dart
-  lib/features/product/bloc/product_state.dart
-  lib/features/product/bloc/product_bloc.dart
-
-Phase 5c (feature/cart-cubit):
-  lib/features/cart/cubit/cart_state.dart
-  lib/features/cart/cubit/cart_cubit.dart
-  lib/main.dart  ← updated with MultiBlocProvider
-
-Phase 6 (feature/*-screen):
-  lib/core/widgets/cart_badge_button.dart
-  lib/core/widgets/error_view.dart
-  lib/features/category/screens/widgets/category_card.dart
-  lib/features/category/screens/category_list_screen.dart
-  lib/features/product/screens/widgets/product_card.dart
-  lib/features/product/screens/product_list_screen.dart
-  lib/features/product/screens/product_detail_screen.dart
-  lib/features/cart/screens/cart_screen.dart
+## CachedNetworkImage pattern (use everywhere)
+```dart
+CachedNetworkImage(
+  imageUrl: url,
+  fit: BoxFit.cover,
+  placeholder: (_, __) => Container(
+    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+    child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+  ),
+  errorWidget: (_, __, ___) => Container(
+    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+    child: const Icon(Icons.broken_image),
+  ),
+)
 ```
 
 ---
@@ -372,7 +364,7 @@ Phase 6 (feature/*-screen):
 
 ## Verification Checklist
 - [ ] `flutter pub get` succeeds after Phase 1
-- [ ] App launches to category grid (no crash) after Phase 6a
+- [ ] App launches to category grid (no crash) after Phase 4
 - [ ] Tapping a category navigates to product grid via go_router
 - [ ] Search filters products without loading spinner
 - [ ] Cart badge increments/decrements in real time across all screens
