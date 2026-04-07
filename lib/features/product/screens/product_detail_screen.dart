@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/product/screens/widgets/circle_icon_button.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final ProductModel product;
@@ -19,7 +21,18 @@ class ProductDetailScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 300,
             pinned: true,
-            actions: const [CartBadgeButton()],
+            leading: Padding(
+              padding: const EdgeInsets.all(8),
+              child: CircleIconButton(
+                child: BackButton(onPressed: () => context.pop()),
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: CircleIconButton(child: const CartBadgeButton()),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: CachedNetworkImage(
                 imageUrl: product.images.first,
@@ -56,8 +69,7 @@ class ProductDetailScreen extends StatelessWidget {
                   Text(product.description, style: textTheme.bodyMedium),
                   const SizedBox(height: 24),
                   // Placeholder — wired to CartCubit in Phase 6
-                  SizedBox(
-                    width: double.infinity,
+                  Center(
                     child: FilledButton.icon(
                       onPressed: () {},
                       icon: const Icon(Icons.shopping_cart_outlined),
