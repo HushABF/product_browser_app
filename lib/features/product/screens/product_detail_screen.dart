@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
+import 'package:product_browser_app/features/cart/cubit/cart_cubit.dart';
+import 'package:product_browser_app/features/cart/cubit/cart_state.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
 import 'package:product_browser_app/features/product/screens/widgets/circle_icon_button.dart';
 
@@ -68,13 +71,27 @@ class ProductDetailScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(product.description, style: textTheme.bodyMedium),
                   const SizedBox(height: 24),
-                  // Placeholder — wired to CartCubit in Phase 6
-                  Center(
-                    child: FilledButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.shopping_cart_outlined),
-                      label: const Text('Add to Cart'),
-                    ),
+                  BlocBuilder<CartCubit, CartState>(
+                    builder: (context, state) {
+                      final inCart = state.items.any((p) => p.id == product.id);
+                      return Center(
+                        child: FilledButton.icon(
+                          onPressed: () {
+                            if (inCart) {
+                              context.read<CartCubit>().removeFromCart(product.id);
+                            } else {
+                              context.read<CartCubit>().addToCart(product);
+                            }
+                          },
+                          icon: Icon(
+                            inCart
+                                ? Icons.remove_shopping_cart_outlined
+                                : Icons.shopping_cart_outlined,
+                          ),
+                          label: Text(inCart ? 'Remove from Cart' : 'Add to Cart'),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
