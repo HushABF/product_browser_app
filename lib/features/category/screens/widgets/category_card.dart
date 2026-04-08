@@ -25,8 +25,6 @@ class CategoryCard extends StatelessWidget {
     final initial = category.name[0].toUpperCase();
 
     return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(

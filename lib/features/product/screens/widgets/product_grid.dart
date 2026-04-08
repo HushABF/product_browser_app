@@ -34,8 +34,8 @@ class ProductGrid extends StatelessWidget {
             pathParameters: {
               'categorySlug':
                   context.read<ProductBloc>().state is ProductSuccess
-                      ? product.category
-                      : '',
+                  ? product.category
+                  : '',
               'productId': product.id.toString(),
             },
             extra: product,

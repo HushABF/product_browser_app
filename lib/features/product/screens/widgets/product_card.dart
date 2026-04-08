@@ -14,8 +14,6 @@ class ProductCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(

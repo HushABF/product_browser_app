@@ -35,16 +35,18 @@ class ProductView extends StatelessWidget {
             child: BlocBuilder<ProductBloc, ProductState>(
               builder: (context, state) => switch (state) {
                 ProductInitial() => const SizedBox.shrink(),
-                ProductLoading() =>
-                  const Center(child: CircularProgressIndicator()),
+                ProductLoading() => const Center(
+                  child: CircularProgressIndicator(),
+                ),
                 ProductError(:final message) => ErrorView(
-                    message: message,
-                    onRetry: () => context.read<ProductBloc>().add(
-                          FetchProductsByCategory(categorySlug),
-                        ),
+                  message: message,
+                  onRetry: () => context.read<ProductBloc>().add(
+                    FetchProductsByCategory(categorySlug),
                   ),
-                ProductSuccess(:final products) =>
-                  ProductGrid(products: products),
+                ),
+                ProductSuccess(:final products) => ProductGrid(
+                  products: products,
+                ),
               },
             ),
           ),

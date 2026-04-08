@@ -28,27 +28,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ) async {
     emit(const ProductLoading());
     final result = await _repository.fetchProductsByCategory(event.slug);
-    result.fold(
-      (failure) => emit(ProductError(failure.message)),
-      (products) {
-        _allProducts = products;
-        emit(ProductSuccess(products));
-      },
-    );
+    result.fold((failure) => emit(ProductError(failure.message)), (products) {
+      _allProducts = products;
+      emit(ProductSuccess(products));
+    });
   }
 
-  void _onSearchProducts(
-    SearchProducts event,
-    Emitter<ProductState> emit,
-  ) {
+  void _onSearchProducts(SearchProducts event, Emitter<ProductState> emit) {
     if (event.query.isEmpty) {
       emit(ProductSuccess(_allProducts));
       return;
     }
     final filtered = _allProducts
-        .where(
-          (p) => p.title.toLowerCase().contains(event.query.toLowerCase()),
-        )
+        .where((p) => p.title.toLowerCase().contains(event.query.toLowerCase()))
         .toList();
     emit(ProductSuccess(filtered));
   }

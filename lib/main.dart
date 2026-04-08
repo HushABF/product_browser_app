@@ -16,15 +16,18 @@ class ProductBrowserApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<CartCubit>(create: (_) => CartCubit()),
-      ],
+      providers: [BlocProvider<CartCubit>(create: (_) => CartCubit())],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Product Browser',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
           useMaterial3: true,
+          appBarTheme: const AppBarTheme(scrolledUnderElevation: 0),
+          cardTheme: const CardThemeData(
+            elevation: 0,
+            clipBehavior: Clip.antiAlias,
+          ),
         ),
         routerConfig: appRouter,
       ),

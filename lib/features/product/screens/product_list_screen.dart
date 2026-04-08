@@ -13,8 +13,9 @@ class ProductListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ProductBloc(getIt<ProductRepository>())
-        ..add(FetchProductsByCategory(categorySlug)),
+      create: (_) =>
+          ProductBloc(getIt<ProductRepository>())
+            ..add(FetchProductsByCategory(categorySlug)),
       child: ProductView(categorySlug: categorySlug),
     );
   }

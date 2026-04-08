@@ -8,10 +8,7 @@ class DioClient {
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     ),
-  )..interceptors.add(LogInterceptor(
-      requestBody: false,
-      responseBody: false,
-    ));
+  )..interceptors.add(LogInterceptor(requestBody: false, responseBody: false));
 
   static Failure handleDioException(DioException e) {
     switch (e.type) {
@@ -21,7 +18,9 @@ class DioClient {
         return const NetworkTimeoutFailure();
       case DioExceptionType.badResponse:
         return ServerFailure.fromStatusCode(
-            e.response?.statusCode, e.response?.data);
+          e.response?.statusCode,
+          e.response?.data,
+        );
       default:
         return NetworkFailure(e.message ?? 'An unexpected error occurred.');
     }

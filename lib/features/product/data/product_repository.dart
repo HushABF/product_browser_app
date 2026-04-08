@@ -24,7 +24,9 @@ class ProductRepository {
     }
   }
 
-  Future<Either<Failure, List<ProductModel>>> fetchProductsByCategory(String slug) async {
+  Future<Either<Failure, List<ProductModel>>> fetchProductsByCategory(
+    String slug,
+  ) async {
     try {
       final response = await _dioClient.dio.get('/products/category/$slug');
       final products = (response.data['products'] as List)
