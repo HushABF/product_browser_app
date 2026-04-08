@@ -32,7 +32,8 @@ class CartScreen extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: state.items.length,
                   itemBuilder: (context, index) {
-                    final product = state.items[index];
+                    final item = state.items[index];
+                    final product = item.product;
                     return Card(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -60,12 +61,39 @@ class CartScreen extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline),
-                          onPressed: () => context
-                              .read<CartCubit>()
-                              .removeFromCart(product.id),
+                        subtitle: Text(
+                          '\$${(product.price * item.quantity).toStringAsFixed(2)}',
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: item.quantity > 1
+                                  ? () => context
+                                        .read<CartCubit>()
+                                        .decrementQuantity(product.id)
+                                  : null,
+                            ),
+                            Text(
+                              '${item.quantity}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () =>
+                                  context.read<CartCubit>().addToCart(product),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              onPressed: () => context
+                                  .read<CartCubit>()
+                                  .removeFromCart(product.id),
+                            ),
+                          ],
                         ),
                       ),
                     );

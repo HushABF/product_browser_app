@@ -70,7 +70,9 @@ class ProductDetailScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   BlocBuilder<CartCubit, CartState>(
                     builder: (context, state) {
-                      final inCart = state.items.any((p) => p.id == product.id);
+                      final inCart = state.items.any(
+                        (i) => i.product.id == product.id,
+                      );
                       return Center(
                         child: FilledButton.icon(
                           onPressed: () {
