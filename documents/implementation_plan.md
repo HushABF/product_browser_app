@@ -121,7 +121,7 @@ feature/data-layer        ← Phase 3 (models + repositories for all features)
 feature/category-feature  ← Phase 4 (CategoryCubit + Category screen)
 feature/product-feature   ← Phase 5 (ProductBloc + Product screens)
 feature/cart-feature      ← Phase 6 (CartCubit + Cart screen)
-feature/polish            ← Phase 7
+feature/polish-and-bonus  ← Phase 7 (polish + optional bonus features)
 ```
 
 ---
@@ -305,29 +305,28 @@ MultiBlocProvider(
 
 ---
 
-## Phase 7 — Polish
-> **Branch:** `feature/polish`
+## Phase 7 — Polish & Bonus (Optional)
+> **Branch:** `feature/polish-and-bonus`
 
+### Required
 - Verify `CartBadgeButton` is in every screen's AppBar
 - Verify `ErrorView` used in all error states with correct retry callback
-- Use `BadgeAnimation.none()` on cart badge
-- Finalize `AppBarTheme` + `CardTheme` in `main.dart` via `ThemeData.copyWith`
+- Finalize `AppBarTheme` (`scrolledUnderElevation: 0`) + `CardTheme` (`elevation: 0`, `clipBehavior: Clip.antiAlias`) in `main.dart`
+- Remove redundant `elevation: 0` and `clipBehavior` from `CategoryCard` and `ProductCard` (now covered by theme)
 
----
+### Bonus (Optional, each is independent)
 
-## Phase 8 — Bonus (Optional, each is independent)
-
-**8a — Cart Quantity Counter**
+**7a — Cart Quantity Counter**
 Replace `List<Product>` with `List<CartItem(Product, int quantity)>` in `CartState`. `addToCart` increments if already exists. Show quantity controls in cart screen.
 
-**8b — Pull-to-Refresh on Product List**
+**7b — Pull-to-Refresh on Product List**
 Wrap `GridView` in `RefreshIndicator`. `onRefresh` fires `FetchProductsByCategory` and awaits `bloc.stream.firstWhere((s) => s is! ProductLoading)`.
 
-**8c — 300ms Search Debounce**
+**7c — 300ms Search Debounce**
 Convert product list screen to `StatefulWidget`. Use `dart:async` `Timer` in `onChanged`. Cancel in `dispose()`.
 
-**8d — Cart Persistence via SharedPreferences**
-Add `CartRepository` in `lib/features/cart/data/cart_repository.dart`. Add `toJson()` to `Product`. `CartCubit` loads cart on init, saves on every mutation.
+**7d — Cart Persistence via SharedPreferences**
+Add `CartRepository` in `lib/features/cart/data/cart_repository.dart`. `CartCubit` loads cart on init, saves on every mutation.
 
 ---
 
