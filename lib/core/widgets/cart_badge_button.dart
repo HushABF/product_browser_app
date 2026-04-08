@@ -13,6 +13,7 @@ class CartBadgeButton extends StatelessWidget {
     return BlocBuilder<CartCubit, CartState>(
       builder: (context, state) {
         return badges.Badge(
+          position: .topEnd(top: 3, end: 5),
           showBadge: state.itemCount > 0,
           badgeAnimation: badges.BadgeAnimation.slide(toAnimate: false),
           badgeContent: Text(
