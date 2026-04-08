@@ -12,7 +12,7 @@ class CategoryCard extends StatelessWidget {
   const CategoryCard({super.key, required this.category, required this.onTap});
 
   ///generates a unique color for each category card based on the category's slug string.
-static  Color accentFromSlug(String slug) {
+  static Color accentFromSlug(String slug) {
     final hue = (slug.codeUnits.fold(0, (a, b) => a + b) % 360).toDouble();
     return HSLColor.fromAHSL(1.0, hue, 0.50, 0.52).toColor();
   }
@@ -69,15 +69,17 @@ static  Color accentFromSlug(String slug) {
                 ),
               ),
               const SizedBox(height: 10),
-              Text(
-                category.name,
-                style: textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onSurface,
-                  height: 1.2,
+              FittedBox(
+                fit: .scaleDown,
+                child: Text(
+                  category.name,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                    height: 1.2,
+                  ),
+                  maxLines: 1,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
