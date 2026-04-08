@@ -44,8 +44,16 @@ class ProductView extends StatelessWidget {
                     FetchProductsByCategory(categorySlug),
                   ),
                 ),
-                ProductSuccess(:final products) => ProductGrid(
-                  products: products,
+                ProductSuccess(:final products) => RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<ProductBloc>().add(
+                      FetchProductsByCategory(categorySlug),
+                    );
+                    await context.read<ProductBloc>().stream.firstWhere(
+                      (s) => s is! ProductLoading,
+                    );
+                  },
+                  child: ProductGrid(products: products),
                 ),
               },
             ),
