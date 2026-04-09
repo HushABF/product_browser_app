@@ -25,7 +25,7 @@ class ServerFailure extends Failure {
       );
     } else if (statusCode == 500) {
       return const ServerFailure(
-        'There is a problem with the server, try later.',
+        'Something went wrong on our end. Try again later.',
         statusCode: 500,
       );
     } else if (statusCode == 400 || statusCode == 401 || statusCode == 403) {
