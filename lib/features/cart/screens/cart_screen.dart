@@ -9,6 +9,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(title: const Text('Cart')),
       body: BlocBuilder<CartCubit, CartState>(
@@ -32,7 +33,8 @@ class CartScreen extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: state.items.length,
                   itemBuilder: (context, index) {
-                    final product = state.items[index];
+                    final item = state.items[index];
+                    final product = item.product;
                     return Card(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -60,12 +62,38 @@ class CartScreen extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline),
-                          onPressed: () => context
-                              .read<CartCubit>()
-                              .removeFromCart(product.id),
+                        subtitle: Text(
+                          '\$${(product.price * item.quantity).toStringAsFixed(2)}',
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: item.quantity > 1
+                                  ? () => context
+                                        .read<CartCubit>()
+                                        .decrementQuantity(product.id)
+                                  : null,
+                            ),
+                            Text(
+                              '${item.quantity}',
+                              style: textTheme.titleMedium!.copyWith(
+                                fontWeight: .w600,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () =>
+                                  context.read<CartCubit>().addToCart(product),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              onPressed: () => context
+                                  .read<CartCubit>()
+                                  .removeFromCart(product.id),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -78,11 +106,11 @@ class CartScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Total',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                        style: textTheme.titleMedium!.copyWith(
+                          fontWeight: .w600,
+                          fontSize: 18
                         ),
                       ),
                       Text(

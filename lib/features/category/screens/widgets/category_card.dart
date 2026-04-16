@@ -25,8 +25,6 @@ class CategoryCard extends StatelessWidget {
     final initial = category.name[0].toUpperCase();
 
     return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
@@ -61,10 +59,9 @@ class CategoryCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   initial,
-                  style: TextStyle(
+                  style: textTheme.titleMedium!.copyWith(
+                    fontWeight: .w700,
                     fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: accent,
                   ),
                 ),
               ),

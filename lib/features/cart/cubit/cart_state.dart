@@ -1,14 +1,15 @@
 import 'package:equatable/equatable.dart';
-import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/cart/cubit/cart_item.dart';
 
 class CartState extends Equatable {
-  final List<ProductModel> items;
+  final List<CartItem> items;
 
   const CartState({this.items = const []});
 
-  int get itemCount => items.length;
+  int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
 
-  double get totalPrice => items.fold(0, (sum, p) => sum + p.price);
+  double get totalPrice =>
+      items.fold(0, (sum, item) => sum + item.product.price * item.quantity);
 
   @override
   List<Object?> get props => [items];
