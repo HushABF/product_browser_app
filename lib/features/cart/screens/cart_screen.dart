@@ -9,6 +9,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(title: const Text('Cart')),
       body: BlocBuilder<CartCubit, CartState>(
@@ -77,9 +78,8 @@ class CartScreen extends StatelessWidget {
                             ),
                             Text(
                               '${item.quantity}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                              style: textTheme.titleMedium!.copyWith(
+                                fontWeight: .w600,
                               ),
                             ),
                             IconButton(
@@ -106,11 +106,11 @@ class CartScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Total',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                        style: textTheme.titleMedium!.copyWith(
+                          fontWeight: .w600,
+                          fontSize: 18
                         ),
                       ),
                       Text(

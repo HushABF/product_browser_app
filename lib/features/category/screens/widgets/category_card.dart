@@ -59,10 +59,9 @@ class CategoryCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   initial,
-                  style: TextStyle(
+                  style: textTheme.titleMedium!.copyWith(
+                    fontWeight: .w700,
                     fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: accent,
                   ),
                 ),
               ),
