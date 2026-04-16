@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
 import 'package:product_browser_app/core/widgets/error_view.dart';
-import 'package:product_browser_app/features/category/cubit/category_cubit.dart';
-import 'package:product_browser_app/features/category/screens/widgets/category_grid.dart';
+import 'package:product_browser_app/features/category/presentation/cubit/category_cubit.dart';
+import 'package:product_browser_app/features/category/presentation/widgets/category_grid.dart';
 
 class CategoryView extends StatelessWidget {
   const CategoryView({super.key});
