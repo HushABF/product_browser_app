@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:product_browser_app/features/product/bloc/product_bloc.dart';
+import 'package:product_browser_app/features/product/presentation/bloc/product_bloc.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
-import 'package:product_browser_app/features/product/screens/widgets/product_card.dart';
+import 'package:product_browser_app/features/product/presentation/widgets/product_card.dart';
 
 class ProductGrid extends StatelessWidget {
   final List<ProductModel> products;

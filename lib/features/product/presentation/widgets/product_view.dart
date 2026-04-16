@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
 import 'package:product_browser_app/core/widgets/error_view.dart';
-import 'package:product_browser_app/features/product/bloc/product_bloc.dart';
-import 'package:product_browser_app/features/product/screens/widgets/product_grid.dart';
+import 'package:product_browser_app/features/product/presentation/bloc/product_bloc.dart';
+import 'package:product_browser_app/features/product/presentation/widgets/product_grid.dart';
 
 class ProductView extends StatefulWidget {
   final String categorySlug;
