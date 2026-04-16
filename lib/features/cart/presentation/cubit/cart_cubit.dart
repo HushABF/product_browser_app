@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:product_browser_app/features/cart/cubit/cart_item.dart';
-import 'package:product_browser_app/features/cart/cubit/cart_state.dart';
+import 'package:product_browser_app/features/cart/data/cart_item.dart';
+import 'package:product_browser_app/features/cart/presentation/cubit/cart_state.dart';
 import 'package:product_browser_app/features/cart/data/cart_repository.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
 

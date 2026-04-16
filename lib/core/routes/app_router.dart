@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/features/category/screens/category_list_screen.dart';
-import 'package:product_browser_app/features/cart/screens/cart_screen.dart';
+import 'package:product_browser_app/features/cart/presentation/screens/cart_screen.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
 import 'package:product_browser_app/features/product/screens/product_detail_screen.dart';
 import 'package:product_browser_app/features/product/screens/product_list_screen.dart';

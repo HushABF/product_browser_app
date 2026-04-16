@@ -2,8 +2,8 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:product_browser_app/features/cart/cubit/cart_cubit.dart';
-import 'package:product_browser_app/features/cart/cubit/cart_state.dart';
+import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:product_browser_app/features/cart/presentation/cubit/cart_state.dart';
 
 class CartBadgeButton extends StatelessWidget {
   const CartBadgeButton({super.key});

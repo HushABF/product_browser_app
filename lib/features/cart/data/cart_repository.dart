@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:product_browser_app/features/cart/cubit/cart_item.dart';
+import 'package:product_browser_app/features/cart/data/cart_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartRepository {

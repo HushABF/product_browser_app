@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/di/service_locator.dart';
 import 'package:product_browser_app/core/routes/app_router.dart';
-import 'package:product_browser_app/features/cart/cubit/cart_cubit.dart';
+import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:product_browser_app/features/cart/data/cart_repository.dart';
 
 void main() async {

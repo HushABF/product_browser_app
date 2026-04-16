@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
-import 'package:product_browser_app/features/cart/cubit/cart_cubit.dart';
-import 'package:product_browser_app/features/cart/cubit/cart_state.dart';
+import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:product_browser_app/features/cart/presentation/cubit/cart_state.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
 
 class ProductDetailScreen extends StatelessWidget {
