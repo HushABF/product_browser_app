@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:product_browser_app/features/category/data/model/category_model.dart';
+import 'package:product_browser_app/features/category/domain/entities/category_entity.dart';
 
 /// A grid card representing a single product category.
 ///
 /// Derives a unique accent color from the slug so every category tile
 /// has its own visual identity without needing per-category assets.
 class CategoryCard extends StatelessWidget {
-  final CategoryModel category;
+  final CategoryEntity category;
   final VoidCallback onTap;
 
   const CategoryCard({super.key, required this.category, required this.onTap});

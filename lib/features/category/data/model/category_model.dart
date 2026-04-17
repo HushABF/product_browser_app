@@ -1,13 +1,11 @@
-import 'package:equatable/equatable.dart';
+import 'package:product_browser_app/features/category/domain/entities/category_entity.dart';
 
-class CategoryModel extends Equatable {
-  final String slug;
-  final String name;
+class CategoryModel extends CategoryEntity {
   final String url;
 
   const CategoryModel({
-    required this.slug,
-    required this.name,
+    required super.slug,
+    required super.name,
     required this.url,
   });
 
@@ -20,5 +18,5 @@ class CategoryModel extends Equatable {
   Map<String, dynamic> toJson() => {'slug': slug, 'name': name, 'url': url};
 
   @override
-  List<Object> get props => [slug, name, url];
+  List<Object?> get props => [slug, name, url];
 }

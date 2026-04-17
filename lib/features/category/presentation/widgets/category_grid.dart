@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:product_browser_app/features/category/data/model/category_model.dart';
+import 'package:product_browser_app/features/category/domain/entities/category_entity.dart';
 import 'package:product_browser_app/features/category/presentation/widgets/category_card.dart';
 
 class CategoryGrid extends StatelessWidget {
-  final List<CategoryModel> categories;
+  final List<CategoryEntity> categories;
 
   const CategoryGrid({super.key, required this.categories});
 

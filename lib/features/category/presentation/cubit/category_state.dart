@@ -16,7 +16,7 @@ final class CategoryLoading extends CategoryState {
 }
 
 final class CategorySuccess extends CategoryState {
-  final List<CategoryModel> categories;
+  final List<CategoryEntity> categories;
 
   const CategorySuccess(this.categories);
 
