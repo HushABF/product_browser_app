@@ -34,7 +34,6 @@ class CartScreen extends StatelessWidget {
                   itemCount: state.items.length,
                   itemBuilder: (context, index) {
                     final item = state.items[index];
-                    final product = item.product;
                     return Card(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -44,7 +43,7 @@ class CartScreen extends StatelessWidget {
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: CachedNetworkImage(
-                            imageUrl: product.thumbnail,
+                            imageUrl: item.thumbnail,
                             width: 56,
                             height: 56,
                             fit: BoxFit.cover,
@@ -58,12 +57,12 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         title: Text(
-                          product.title,
+                          item.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Text(
-                          '\$${(product.price * item.quantity).toStringAsFixed(2)}',
+                          '\$${(item.price * item.quantity).toStringAsFixed(2)}',
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -73,25 +72,25 @@ class CartScreen extends StatelessWidget {
                               onPressed: item.quantity > 1
                                   ? () => context
                                         .read<CartCubit>()
-                                        .decrementQuantity(product.id)
+                                        .decrementQuantity(item.productId)
                                   : null,
                             ),
                             Text(
                               '${item.quantity}',
                               style: textTheme.titleMedium!.copyWith(
-                                fontWeight: .w600,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             IconButton(
                               icon: const Icon(Icons.add),
                               onPressed: () =>
-                                  context.read<CartCubit>().addToCart(product),
+                                  context.read<CartCubit>().addToCart(item.copyWith(quantity: 1)),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete_outline),
                               onPressed: () => context
                                   .read<CartCubit>()
-                                  .removeFromCart(product.id),
+                                  .removeFromCart(item.productId),
                             ),
                           ],
                         ),

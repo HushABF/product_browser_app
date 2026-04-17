@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_state.dart';
-import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/cart/domain/entities/cart_item.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -72,7 +72,7 @@ class ProductDetailScreen extends StatelessWidget {
                   BlocBuilder<CartCubit, CartState>(
                     builder: (context, state) {
                       final inCart = state.items.any(
-                        (i) => i.product.id == product.id,
+                        (i) => i.productId == product.id,
                       );
                       return Center(
                         child: FilledButton.icon(
@@ -82,10 +82,14 @@ class ProductDetailScreen extends StatelessWidget {
                                 product.id,
                               );
                             } else {
-                              // Temporary cast until cart domain layer is
-                              // implemented in Part 3.
                               context.read<CartCubit>().addToCart(
-                                product as ProductModel,
+                                CartItem(
+                                  productId: product.id,
+                                  title: product.title,
+                                  thumbnail: product.thumbnail,
+                                  price: product.price,
+                                  quantity: 1,
+                                ),
                               );
                             }
                           },
