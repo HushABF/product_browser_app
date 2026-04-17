@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:product_browser_app/features/product/presentation/bloc/product_bloc.dart';
-import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 import 'package:product_browser_app/features/product/presentation/widgets/product_card.dart';
 
 class ProductGrid extends StatelessWidget {
-  final List<ProductModel> products;
+  final List<ProductEntity> products;
+  final String categorySlug;
 
-  const ProductGrid({super.key, required this.products});
+  const ProductGrid({
+    super.key,
+    required this.products,
+    required this.categorySlug,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +35,7 @@ class ProductGrid extends StatelessWidget {
           onTap: () => context.pushNamed(
             'productDetail',
             pathParameters: {
-              'categorySlug':
-                  context.read<ProductBloc>().state is ProductSuccess
-                  ? product.category
-                  : '',
+              'categorySlug': categorySlug,
               'productId': product.id.toString(),
             },
             extra: product,

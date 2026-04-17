@@ -1,15 +1,11 @@
-import 'package:equatable/equatable.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 import 'dimensions.dart';
 import 'meta.dart';
 import 'review.dart';
 
-class ProductModel extends Equatable {
-  final int id;
-  final String title;
-  final String description;
+class ProductModel extends ProductEntity {
   final String category;
-  final double price;
   final double? discountPercentage;
   final double rating;
   final int stock;
@@ -25,15 +21,15 @@ class ProductModel extends Equatable {
   final String? returnPolicy;
   final int? minimumOrderQuantity;
   final Meta? meta;
-  final List<String> images;
-  final String thumbnail;
 
   const ProductModel({
-    required this.id,
-    required this.title,
-    required this.description,
+    required super.id,
+    required super.title,
+    required super.description,
+    required super.price,
+    required super.thumbnail,
+    required super.images,
     required this.category,
-    required this.price,
     this.discountPercentage,
     required this.rating,
     required this.stock,
@@ -49,8 +45,6 @@ class ProductModel extends Equatable {
     this.returnPolicy,
     this.minimumOrderQuantity,
     this.meta,
-    required this.images,
-    required this.thumbnail,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -114,8 +108,10 @@ class ProductModel extends Equatable {
     id,
     title,
     description,
-    category,
     price,
+    thumbnail,
+    images,
+    category,
     discountPercentage,
     rating,
     stock,
@@ -131,7 +127,5 @@ class ProductModel extends Equatable {
     returnPolicy,
     minimumOrderQuantity,
     meta,
-    images,
-    thumbnail,
   ];
 }

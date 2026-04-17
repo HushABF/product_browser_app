@@ -4,11 +4,13 @@ import 'package:product_browser_app/core/errors/failures.dart';
 import 'package:product_browser_app/core/network/dio_client.dart';
 import 'package:product_browser_app/features/category/data/model/category_model.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
+import 'package:product_browser_app/features/product/domain/repositories/product_repository.dart';
 
-class ProductRepository {
+class ProductRepositoryImpl implements ProductRepository {
   final DioClient _dioClient;
 
-  ProductRepository(this._dioClient);
+  ProductRepositoryImpl(this._dioClient);
 
   Future<Either<Failure, List<CategoryModel>>> fetchCategories() async {
     try {
@@ -24,7 +26,8 @@ class ProductRepository {
     }
   }
 
-  Future<Either<Failure, List<ProductModel>>> fetchProductsByCategory(
+  @override
+  Future<Either<Failure, List<ProductEntity>>> fetchProductsByCategory(
     String slug,
   ) async {
     try {

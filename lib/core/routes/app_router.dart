@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/features/category/presentation/screens/category_list_screen.dart';
 import 'package:product_browser_app/features/cart/presentation/screens/cart_screen.dart';
-import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 import 'package:product_browser_app/features/product/presentation/screens/product_detail_screen.dart';
 import 'package:product_browser_app/features/product/presentation/screens/product_list_screen.dart';
 
@@ -25,7 +25,7 @@ final appRouter = GoRouter(
       name: 'productDetail',
       path: '/products/:categorySlug/:productId',
       builder: (context, state) {
-        final product = state.extra as ProductModel;
+        final product = state.extra as ProductEntity;
         return ProductDetailScreen(product: product);
       },
     ),

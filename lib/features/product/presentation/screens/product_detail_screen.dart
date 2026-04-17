@@ -6,9 +6,10 @@ import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_state.dart';
 import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  final ProductModel product;
+  final ProductEntity product;
 
   const ProductDetailScreen({super.key, required this.product});
 
@@ -81,7 +82,11 @@ class ProductDetailScreen extends StatelessWidget {
                                 product.id,
                               );
                             } else {
-                              context.read<CartCubit>().addToCart(product);
+                              // Temporary cast until cart domain layer is
+                              // implemented in Part 3.
+                              context.read<CartCubit>().addToCart(
+                                product as ProductModel,
+                              );
                             }
                           },
                           icon: Icon(

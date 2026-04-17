@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:product_browser_app/features/product/data/model/product_model/product_model.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ProductCard extends StatelessWidget {
-  final ProductModel product;
+  final ProductEntity product;
   final VoidCallback onTap;
 
   const ProductCard({super.key, required this.product, required this.onTap});

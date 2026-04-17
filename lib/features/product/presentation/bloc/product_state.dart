@@ -16,7 +16,7 @@ final class ProductLoading extends ProductState {
 }
 
 final class ProductSuccess extends ProductState {
-  final List<ProductModel> products;
+  final List<ProductEntity> products;
 
   const ProductSuccess(this.products);
 

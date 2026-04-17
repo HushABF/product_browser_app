@@ -74,7 +74,10 @@ class _ProductViewState extends State<ProductView> {
                       (s) => s is! ProductLoading,
                     );
                   },
-                  child: ProductGrid(products: products),
+                  child: ProductGrid(
+                    products: products,
+                    categorySlug: widget.categorySlug,
+                  ),
                 ),
               },
             ),

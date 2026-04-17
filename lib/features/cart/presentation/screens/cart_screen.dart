@@ -110,14 +110,14 @@ class CartScreen extends StatelessWidget {
                         'Total',
                         style: textTheme.titleMedium!.copyWith(
                           fontWeight: .w600,
-                          fontSize: 18
+                          fontSize: 18,
                         ),
                       ),
                       Text(
                         '\$${state.totalPrice.toStringAsFixed(2)}',
-                        style: const TextStyle(
+                        style: textTheme.titleMedium!.copyWith(
+                          fontWeight: .w700,
                           fontSize: 18,
-                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ],
