@@ -5,10 +5,11 @@ import 'package:product_browser_app/features/chat/domain/usecases/send_message_u
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:product_browser_app/features/chat/presentation/widgets/chat_view.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ChatScreen extends StatelessWidget {
-  final String productId;
-  const ChatScreen({super.key, required this.productId});
+  final ProductEntity product;
+  const ChatScreen({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,8 @@ class ChatScreen extends StatelessWidget {
       create: (context) => ChatBloc(
         watchMessages: getIt<WatchMessagesUseCase>(),
         sendMessage: getIt<SendMessageUseCase>(),
-      )..add(WatchMessages(productId: productId)),
-      child: ChatView(productId: productId),
+      )..add(WatchMessages(productId: product.id.toString())),
+      child: ChatView(product: product),
     );
   }
 }

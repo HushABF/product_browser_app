@@ -37,10 +37,10 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       name: 'chat',
-      path: '/chat/:productId',
+      path: '/chat',
       builder: (context, state) {
-        final productId = state.pathParameters['productId']!;
-        return ChatScreen(productId: productId);
+        final product = state.extra as ProductEntity;
+        return ChatScreen(product: product);
       },
     ),
   ],

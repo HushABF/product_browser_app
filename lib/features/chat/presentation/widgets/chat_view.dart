@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ChatView extends StatelessWidget {
-  final String productId;
-  const ChatView({super.key, required this.productId});
+  final ProductEntity product;
+  const ChatView({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(appBar: AppBar(title: Text(product.title)));
   }
 }
