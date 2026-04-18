@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/features/category/presentation/screens/category_list_screen.dart';
 import 'package:product_browser_app/features/cart/presentation/screens/cart_screen.dart';
+import 'package:product_browser_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 import 'package:product_browser_app/features/product/presentation/screens/product_detail_screen.dart';
 import 'package:product_browser_app/features/product/presentation/screens/product_list_screen.dart';
@@ -33,6 +34,14 @@ final appRouter = GoRouter(
       name: 'cart',
       path: '/cart',
       builder: (context, state) => const CartScreen(),
+    ),
+    GoRoute(
+      name: 'chat',
+      path: '/chat/:productId',
+      builder: (context, state) {
+        final productId = state.pathParameters['productId']!;
+        return ChatScreen(productId: productId);
+      },
     ),
   ],
 );
