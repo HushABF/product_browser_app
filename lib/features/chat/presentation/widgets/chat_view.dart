@@ -16,6 +16,28 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+  bool _justSent = false;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200) {
+      final state = context.read<ChatBloc>().state;
+      if (state is ChatLoaded && !state.isLoadingMore && state.hasMore) {
+        context.read<ChatBloc>().add(
+          LoadMoreMessages(
+            productId: widget.product.id.toString(),
+            before: state.messages.last.createdAt,
+          ),
+        );
+      }
+    }
+  }
 
   void _send() {
     final text = textEditingController.text.trim();
@@ -24,6 +46,7 @@ class _ChatViewState extends State<ChatView> {
       SendMessage(productId: widget.product.id.toString(), text: text),
     );
     textEditingController.clear();
+    _justSent = true;
   }
 
   void _scrollToBottom() {
@@ -107,8 +130,13 @@ class _ChatViewState extends State<ChatView> {
     return ListView.builder(
       reverse: true,
       controller: scrollController,
-      itemCount: state.messages.length,
+      itemCount: state.isLoadingMore
+          ? state.messages.length + 1
+          : state.messages.length,
       itemBuilder: (context, index) {
+        if (index == state.messages.length) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return _buildComment(
           message: state.messages[index],
           currentUsername: state.currentUsername,
@@ -159,6 +187,7 @@ class _ChatViewState extends State<ChatView> {
   @override
   void dispose() {
     textEditingController.dispose();
+    scrollController.removeListener(_onScroll);
     scrollController.dispose();
     super.dispose();
   }
@@ -182,8 +211,11 @@ class _ChatViewState extends State<ChatView> {
               listener: (context, state) {
                 if (state is ChatLoaded &&
                     state.messages.isNotEmpty &&
+                    !state.isLoadingMore &&
+                    _justSent &&
                     state.messages.first.senderUsername ==
                         state.currentUsername) {
+                  _justSent = false;
                   WidgetsBinding.instance.addPostFrameCallback(
                     (_) => _scrollToBottom(),
                   );
