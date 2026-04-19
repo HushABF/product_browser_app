@@ -13,6 +13,7 @@ import 'package:product_browser_app/features/chat/data/repositories/chat_reposit
 import 'package:product_browser_app/features/chat/data/repositories/user_repository_impl.dart';
 import 'package:product_browser_app/features/chat/domain/repositories/chat_repository.dart';
 import 'package:product_browser_app/features/chat/domain/repositories/user_repository.dart';
+import 'package:product_browser_app/features/chat/domain/usecases/get_older_messages_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/get_or_generate_username_usecase.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/send_message_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
@@ -75,6 +76,9 @@ Future<void> setupLocator() async {
   );
   getIt.registerLazySingleton(
     () => GetOrGenerateUsernameUsecase(userRepository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => GetOlderMessagesUseCase(chatRepository: getIt()),
   );
   getIt.registerFactory(
     () => ChatBloc(
