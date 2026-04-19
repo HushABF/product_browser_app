@@ -16,6 +16,7 @@ import 'package:product_browser_app/features/chat/domain/repositories/user_repos
 import 'package:product_browser_app/features/chat/domain/usecases/get_older_messages_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/get_or_generate_username_usecase.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/send_message_use_case.dart';
+import 'package:product_browser_app/features/chat/domain/usecases/watch_message_count_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/message_count_cubit/message_counter_cubit.dart';
@@ -88,5 +89,10 @@ Future<void> setupLocator() async {
       getOlderMessages: getIt(),
     ),
   );
-  getIt.registerFactory(() => MessageCounterCubit(watchMessages: getIt()));
+  getIt.registerLazySingleton(
+    () => WatchMessageCountUseCase(getIt<ChatRepository>()),
+  );
+  getIt.registerFactory(
+    () => MessageCounterCubit(watchMessageCount: getIt()),
+  );
 }

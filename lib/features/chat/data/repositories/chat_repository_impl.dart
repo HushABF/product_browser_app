@@ -24,6 +24,16 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+  Stream<int> getMessagesCount({required String productId}) {
+    return firestore
+        .collection('chats')
+        .doc(productId)
+        .collection('messages')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  @override
   Future<void> sendMessage({
     required String productId,
     required String senderUsername,

@@ -8,6 +8,8 @@ abstract class ChatRepository {
     required String text,
   });
 
+  Stream<int> getMessagesCount({required String productId});
+
   Future<List<MessageEntity>> getOlderMessages({
     required String productId,
     required DateTime before,
