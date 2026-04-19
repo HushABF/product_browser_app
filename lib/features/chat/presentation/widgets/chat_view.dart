@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/widgets/error_view.dart';
 import 'package:product_browser_app/features/chat/domain/entities/message_entity.dart';
-import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ChatView extends StatefulWidget {
