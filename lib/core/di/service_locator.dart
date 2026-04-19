@@ -85,6 +85,7 @@ Future<void> setupLocator() async {
       watchMessages: getIt(),
       sendMessage: getIt(),
       getOrGenerateUsername: getIt(),
+      getOlderMessages: getIt(),
     ),
   );
   getIt.registerFactory(() => MessageCounterCubit(watchMessages: getIt()));

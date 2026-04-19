@@ -34,3 +34,12 @@ final class _NewMessage extends ChatEvent {
 }
 
 final class _StreamError extends ChatEvent {}
+
+final class LoadMoreMessages extends ChatEvent {
+  final String productId;
+  final DateTime before;
+
+  const LoadMoreMessages({required this.productId, required this.before});
+  @override
+  List<Object> get props => [productId, before];
+}
