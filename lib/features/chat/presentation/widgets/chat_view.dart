@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
-class ChatView extends StatelessWidget {
+class ChatView extends StatefulWidget {
   final ProductEntity product;
   const ChatView({super.key, required this.product});
 
-  Widget _buildComment(BuildContext context) {
+  @override
+  State<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  Widget _buildComment() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       child: Column(
         crossAxisAlignment: .end,
         children: [
-          Text('Mohammed', style: Theme.of(context).textTheme.bodySmall),
+          Text('Mohammed', style: textTheme.bodySmall),
           Container(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.72,
@@ -19,7 +27,7 @@ class ChatView extends StatelessWidget {
             alignment: .center,
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              color: colorScheme.primary,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(8),
                 topLeft: Radius.circular(8),
@@ -28,6 +36,7 @@ class ChatView extends StatelessWidget {
             ),
             child: Text(
               'A curated shop and a quiet feed  curated shop and a quiet feed  curated shop and a quiet feed ',
+              style: TextStyle(color: colorScheme.onPrimary),
             ),
           ),
         ],
@@ -37,12 +46,12 @@ class ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
-    var textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          product.title,
+          widget.product.title,
           style: textTheme.titleSmall!.copyWith(fontWeight: .bold),
         ),
       ),
@@ -51,14 +60,14 @@ class ChatView extends StatelessWidget {
           ListTile(
             // tileColor: Colors.grey.shade200,
             tileColor: colorScheme.secondaryFixed,
-            leading: Image.network(product.thumbnail),
+            leading: Image.network(widget.product.thumbnail),
             title: Text(
-              product.title,
+              widget.product.title,
               style: textTheme.bodySmall!.copyWith(fontWeight: .normal),
             ),
-            subtitle: Text('\$${product.price.toString()}'),
+            subtitle: Text('\$${widget.product.price.toString()}'),
             trailing: Text(
-              'Rating: ${product.rating}',
+              'Rating: ${widget.product.rating}',
               style: textTheme.bodySmall,
             ),
           ),
@@ -66,7 +75,7 @@ class ChatView extends StatelessWidget {
             child: ListView.builder(
               itemCount: 15,
               itemBuilder: (context, index) {
-                return _buildComment(context);
+                return _buildComment();
               },
             ),
           ),

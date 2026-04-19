@@ -14,7 +14,7 @@ class UserRepositoryImpl implements UserRepository {
     if (existingUser != null) {
       return UserEntity(userName: existingUser as String);
     }
-    final String username = const Uuid().v4().substring(0, 8);
+    final String username = 'User_${const Uuid().v4().substring(0, 8)}';
     await sharedPref.setString(_key, username);
     return UserEntity(userName: username);
   }
