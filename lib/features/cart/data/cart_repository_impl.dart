@@ -5,12 +5,14 @@ import 'package:product_browser_app/features/cart/domain/repositories/cart_repos
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartRepositoryImpl implements CartRepository {
+  final SharedPreferences sharedPref;
   static const _key = 'cart_items';
+
+  CartRepositoryImpl({required this.sharedPref});
 
   @override
   Future<List<CartItem>> loadCart() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_key);
+    final raw = sharedPref.getString(_key);
     if (raw == null) return [];
     final list = jsonDecode(raw) as List<dynamic>;
     return list
@@ -20,15 +22,17 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> saveCart(List<CartItem> items) async {
-    final prefs = await SharedPreferences.getInstance();
-    // we need to serialize using CartItemModel
-    final models = items.map((e) => CartItemModel(
-      productId: e.productId,
-      title: e.title,
-      thumbnail: e.thumbnail,
-      price: e.price,
-      quantity: e.quantity,
-    ).toJson()).toList();
-    await prefs.setString(_key, jsonEncode(models));
+    final models = items
+        .map(
+          (e) => CartItemModel(
+            productId: e.productId,
+            title: e.title,
+            thumbnail: e.thumbnail,
+            price: e.price,
+            quantity: e.quantity,
+          ).toJson(),
+        )
+        .toList();
+    await sharedPref.setString(_key, jsonEncode(models));
   }
 }
