@@ -17,16 +17,11 @@ final class WatchMessages extends ChatEvent {
 
 final class SendMessage extends ChatEvent {
   final String productId;
-  final String senderUsername;
   final String text;
-  const SendMessage({
-    required this.productId,
-    required this.senderUsername,
-    required this.text,
-  });
+  const SendMessage({required this.productId, required this.text});
 
   @override
-  List<Object> get props => [productId, senderUsername, text];
+  List<Object> get props => [productId, text];
 }
 
 final class _NewMessage extends ChatEvent {

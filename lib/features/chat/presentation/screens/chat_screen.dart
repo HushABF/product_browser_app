@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/di/service_locator.dart';
+import 'package:product_browser_app/features/chat/domain/usecases/get_or_generate_username_usecase.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/send_message_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc.dart';
@@ -17,6 +18,7 @@ class ChatScreen extends StatelessWidget {
       create: (context) => ChatBloc(
         watchMessages: getIt<WatchMessagesUseCase>(),
         sendMessage: getIt<SendMessageUseCase>(),
+        getOrGenerateUsername: getIt<GetOrGenerateUsernameUsecase>(),
       )..add(WatchMessages(productId: product.id.toString())),
       child: ChatView(product: product),
     );
