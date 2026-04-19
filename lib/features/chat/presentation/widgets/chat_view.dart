@@ -32,28 +32,44 @@ class _ChatViewState extends State<ChatView> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    final isMe = message.senderUsername == currentUsername;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       child: Column(
-        crossAxisAlignment: .end,
+        crossAxisAlignment: isMe ? .end : .start,
         children: [
-          Text(message.senderUsername, style: textTheme.bodySmall),
+          isMe
+              ? const SizedBox.shrink()
+              : Text(message.senderUsername, style: textTheme.bodySmall),
           Container(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.72,
             ),
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: colorScheme.primary,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(8),
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
+              color: isMe
+                  ? colorScheme.primary
+                  : colorScheme.secondaryContainer,
+              borderRadius: isMe
+                  ? BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                    )
+                  : BorderRadius.only(
+                      bottomRight: Radius.circular(8),
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                    ),
             ),
             child: Text(
               message.text,
-              style: TextStyle(color: colorScheme.onPrimary),
+              style: TextStyle(
+                color: isMe
+                    ? colorScheme.onPrimary
+                    : colorScheme.onSecondaryContainer,
+              ),
             ),
           ),
         ],
