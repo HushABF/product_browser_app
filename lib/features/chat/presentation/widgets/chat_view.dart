@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:product_browser_app/core/widgets/error_view.dart';
+import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ChatView extends StatefulWidget {
@@ -72,10 +75,21 @@ class _ChatViewState extends State<ChatView> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 15,
-              itemBuilder: (context, index) {
-                return _buildComment();
+            child: BlocBuilder<ChatBloc, ChatState>(
+              builder: (context, state) {
+                if (state is ChatLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is ChatError) {
+                  return ErrorView(message: state.errorMessage);
+                } else if (state is ChatLoaded) {
+                  return ListView.builder(
+                    itemCount: 15,
+                    itemBuilder: (context, index) {
+                      return _buildComment();
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
               },
             ),
           ),
