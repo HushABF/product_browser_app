@@ -5,32 +5,29 @@ class ChatView extends StatelessWidget {
   final ProductEntity product;
   const ChatView({super.key, required this.product});
 
-  Widget _buildComment() {
+  Widget _buildComment(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8, top: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      child: Column(
+        crossAxisAlignment: .end,
         children: [
-          CircleAvatar(child: Text('M')),
-          SizedBox(width: 8),
-          Expanded(
-            // <-- key: gives Column bounded width
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'Mia O.',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(' · 2h', style: TextStyle(color: Colors.grey)),
-                  ],
-                ),
-                Text(
-                  'Owned mine for 3 weeks. ANC is better than the \$400 competitors.',
-                ),
-              ],
+          Text('Mohammed', style: Theme.of(context).textTheme.bodySmall),
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.72,
+            ),
+            alignment: .center,
+            padding: EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(8),
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              ),
+            ),
+            child: Text(
+              'A curated shop and a quiet feed  curated shop and a quiet feed  curated shop and a quiet feed ',
             ),
           ),
         ],
@@ -67,11 +64,17 @@ class ChatView extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: 5,
+              itemCount: 15,
               itemBuilder: (context, index) {
-                return _buildComment();
+                return _buildComment(context);
               },
             ),
+          ),
+          Row(
+            children: [
+              Expanded(child: TextField()),
+              IconButton.filled(onPressed: () {}, icon: Icon(Icons.send)),
+            ],
           ),
         ],
       ),
