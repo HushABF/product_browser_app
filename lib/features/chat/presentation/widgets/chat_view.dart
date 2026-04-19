@@ -14,6 +14,17 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
+  final TextEditingController textEditingController = TextEditingController();
+
+  void _send() {
+    final text = textEditingController.text.trim();
+    if (text.isEmpty) return;
+    context.read<ChatBloc>().add(
+      SendMessage(productId: widget.product.id.toString(), text: text),
+    );
+    textEditingController.clear();
+  }
+
   Widget _buildComment({
     required MessageEntity message,
     required String currentUsername,
@@ -31,7 +42,6 @@ class _ChatViewState extends State<ChatView> {
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.72,
             ),
-            alignment: .center,
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: colorScheme.primary,
@@ -49,6 +59,12 @@ class _ChatViewState extends State<ChatView> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -102,8 +118,8 @@ class _ChatViewState extends State<ChatView> {
           ),
           Row(
             children: [
-              Expanded(child: TextField()),
-              IconButton.filled(onPressed: () {}, icon: Icon(Icons.send)),
+              Expanded(child: TextField(controller: textEditingController)),
+              IconButton.filled(onPressed: _send, icon: Icon(Icons.send)),
             ],
           ),
         ],
