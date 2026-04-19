@@ -126,6 +126,7 @@ class _ChatViewState extends State<ChatView> {
               children: [
                 Expanded(
                   child: TextField(
+                    maxLength: 500,
                     controller: textEditingController,
                     decoration: InputDecoration(
                       hintText: 'Write a message…',
