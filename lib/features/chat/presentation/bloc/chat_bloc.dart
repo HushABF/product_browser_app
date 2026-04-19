@@ -43,8 +43,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         );
   }
 
-  void _onNewMessages(_NewMessage event, Emitter<ChatState> emit) =>
-      emit(ChatLoaded(messages: event.messages));
+  void _onNewMessages(_NewMessage event, Emitter<ChatState> emit) => emit(
+    ChatLoaded(
+      messages: event.messages,
+      currentUsername: _currentUser!.userName,
+    ),
+  );
 
   Future<void> _onSend(SendMessage event, Emitter<ChatState> emit) async {
     _currentUser ??= await _getOrGenerateUsername();
