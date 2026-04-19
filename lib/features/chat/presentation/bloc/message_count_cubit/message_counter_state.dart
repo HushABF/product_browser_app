@@ -1,10 +1,10 @@
 part of 'message_counter_cubit.dart';
 
-sealed class MessageCounterState extends Equatable {
-  const MessageCounterState();
+ class MessageCounterState extends Equatable {
+  final int count;
+  const MessageCounterState({required this.count});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [count];
 }
 
-final class MessageCounterInitial extends MessageCounterState {}
