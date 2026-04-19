@@ -39,4 +39,22 @@ class ChatRepositoryImpl implements ChatRepository {
           'createdAt': FieldValue.serverTimestamp(),
         });
   }
+
+  @override
+  Future<List<MessageEntity>> getOlderMessages({
+    required String productId,
+    required DateTime before,
+    required int limit,
+  }) async {
+    final snapshot = await firestore
+        .collection('chats')
+        .doc(productId)
+        .collection('messages')
+        .orderBy('createdAt', descending: true)
+        .startAfter([Timestamp.fromDate(before)])
+        .limit(limit)
+        .get();
+
+    return snapshot.docs.map((doc) => MessageModel.fromFirestore(doc)).toList();
+  }
 }

@@ -7,4 +7,10 @@ abstract class ChatRepository {
     required String senderUsername,
     required String text,
   });
+
+  Future<List<MessageEntity>> getOlderMessages({
+    required String productId,
+    required DateTime before,
+    required int limit,
+  });
 }
