@@ -32,3 +32,5 @@ final class _NewMessage extends ChatEvent {
   @override
   List<Object> get props => [messages];
 }
+
+final class _StreamError extends ChatEvent {}

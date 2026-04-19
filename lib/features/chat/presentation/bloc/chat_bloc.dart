@@ -29,9 +29,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<WatchMessages>(_onWatch);
     on<SendMessage>(_onSend);
     on<_NewMessage>(_onNewMessages);
+    on<_StreamError>(_onStreamError);
   }
 
-  void _onWatch(WatchMessages event, Emitter<ChatState> emit) async {
+  Future<void> _onWatch(WatchMessages event, Emitter<ChatState> emit) async {
     _currentUser ??= await _getOrGenerateUsername();
     _sub?.cancel();
     emit(ChatLoading());
@@ -39,7 +40,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         .call(productId: event.productId)
         .listen(
           (messages) => add(_NewMessage(messages: messages)),
-          onError: (_) => emit(ChatError(errorMessage: 'Failed to load')),
+          onError: (_) => add(_StreamError()),
         );
   }
 
@@ -58,6 +59,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       text: event.text,
     );
   }
+
+  void _onStreamError(_StreamError e, Emitter<ChatState> emit) =>
+      emit(ChatError(errorMessage: 'Failed to load'));
 
   @override
   Future<void> close() {

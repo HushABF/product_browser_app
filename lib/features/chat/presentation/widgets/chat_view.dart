@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/widgets/error_view.dart';
+import 'package:product_browser_app/features/chat/domain/entities/message_entity.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
@@ -13,7 +14,10 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  Widget _buildComment() {
+  Widget _buildComment({
+    required MessageEntity message,
+    required String currentUsername,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -22,7 +26,7 @@ class _ChatViewState extends State<ChatView> {
       child: Column(
         crossAxisAlignment: .end,
         children: [
-          Text('Mohammed', style: textTheme.bodySmall),
+          Text(message.senderUsername, style: textTheme.bodySmall),
           Container(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.72,
@@ -38,7 +42,7 @@ class _ChatViewState extends State<ChatView> {
               ),
             ),
             child: Text(
-              'A curated shop and a quiet feed  curated shop and a quiet feed  curated shop and a quiet feed ',
+              message.text,
               style: TextStyle(color: colorScheme.onPrimary),
             ),
           ),
@@ -83,9 +87,12 @@ class _ChatViewState extends State<ChatView> {
                   return ErrorView(message: state.errorMessage);
                 } else if (state is ChatLoaded) {
                   return ListView.builder(
-                    itemCount: 15,
+                    itemCount: state.messages.length,
                     itemBuilder: (context, index) {
-                      return _buildComment();
+                      return _buildComment(
+                        message: state.messages[index],
+                        currentUsername: state.currentUsername,
+                      );
                     },
                   );
                 }
