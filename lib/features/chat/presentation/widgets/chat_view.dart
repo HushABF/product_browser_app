@@ -5,6 +5,39 @@ class ChatView extends StatelessWidget {
   final ProductEntity product;
   const ChatView({super.key, required this.product});
 
+  Widget _buildComment() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, top: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(child: Text('M')),
+          SizedBox(width: 8),
+          Expanded(
+            // <-- key: gives Column bounded width
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Mia O.',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(' · 2h', style: TextStyle(color: Colors.grey)),
+                  ],
+                ),
+                Text(
+                  'Owned mine for 3 weeks. ANC is better than the \$400 competitors.',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
@@ -32,9 +65,14 @@ class ChatView extends StatelessWidget {
               style: textTheme.bodySmall,
             ),
           ),
-          Expanded(child: ListView.builder(itemBuilder: (context, index) {
-            return ListTile()
-          },))
+          Expanded(
+            child: ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return _buildComment();
+              },
+            ),
+          ),
         ],
       ),
     );

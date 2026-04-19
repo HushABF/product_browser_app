@@ -66,6 +66,13 @@ class ProductDetailScreen extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  Text(
+                    'Rating: ${product.rating}',
+                    style: textTheme.titleSmall?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   Text(product.description, style: textTheme.bodyMedium),
                   const SizedBox(height: 24),
