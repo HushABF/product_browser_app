@@ -15,6 +15,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final TextEditingController textEditingController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   void _send() {
     final text = textEditingController.text.trim();
@@ -23,6 +24,14 @@ class _ChatViewState extends State<ChatView> {
       SendMessage(productId: widget.product.id.toString(), text: text),
     );
     textEditingController.clear();
+  }
+
+  void _scrollToBottom() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   Widget _buildComment({
@@ -80,6 +89,7 @@ class _ChatViewState extends State<ChatView> {
   @override
   void dispose() {
     textEditingController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -111,7 +121,17 @@ class _ChatViewState extends State<ChatView> {
             ),
           ),
           Expanded(
-            child: BlocBuilder<ChatBloc, ChatState>(
+            child: BlocConsumer<ChatBloc, ChatState>(
+              listener: (context, state) {
+                if (state is ChatLoaded &&
+                    state.messages.isNotEmpty &&
+                    state.messages.last.senderUsername ==
+                        state.currentUsername) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => _scrollToBottom(),
+                  );
+                }
+              },
               builder: (context, state) {
                 if (state is ChatLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -119,6 +139,7 @@ class _ChatViewState extends State<ChatView> {
                   return ErrorView(message: state.errorMessage);
                 } else if (state is ChatLoaded) {
                   return ListView.builder(
+                    controller: scrollController,
                     itemCount: state.messages.length,
                     itemBuilder: (context, index) {
                       return _buildComment(
