@@ -86,6 +86,73 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
+  ListTile _buildProductHeader(ColorScheme colorScheme, TextTheme textTheme) {
+    return ListTile(
+      tileColor: colorScheme.secondaryFixed,
+      leading: Image.network(widget.product.thumbnail),
+      title: Text(
+        widget.product.title,
+        style: textTheme.bodySmall!.copyWith(fontWeight: .normal),
+      ),
+      subtitle: Text('\$${widget.product.price.toString()}'),
+      trailing: Text(
+        'Rating: ${widget.product.rating}',
+        style: textTheme.bodySmall,
+      ),
+    );
+  }
+
+  ListView _buildMessageList(ChatLoaded state) {
+    return ListView.builder(
+      controller: scrollController,
+      itemCount: state.messages.length,
+      itemBuilder: (context, index) {
+        return _buildComment(
+          message: state.messages[index],
+          currentUsername: state.currentUsername,
+        );
+      },
+    );
+  }
+
+  Widget _buildInputBar() {
+    return Column(
+      children: [
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: SafeArea(
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: textEditingController,
+                    decoration: InputDecoration(
+                      hintText: 'Write a message…',
+                      filled: true,
+                      fillColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton.filled(onPressed: _send, icon: Icon(Icons.send)),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   void dispose() {
     textEditingController.dispose();
@@ -106,20 +173,7 @@ class _ChatViewState extends State<ChatView> {
       ),
       body: Column(
         children: [
-          ListTile(
-            // tileColor: Colors.grey.shade200,
-            tileColor: colorScheme.secondaryFixed,
-            leading: Image.network(widget.product.thumbnail),
-            title: Text(
-              widget.product.title,
-              style: textTheme.bodySmall!.copyWith(fontWeight: .normal),
-            ),
-            subtitle: Text('\$${widget.product.price.toString()}'),
-            trailing: Text(
-              'Rating: ${widget.product.rating}',
-              style: textTheme.bodySmall,
-            ),
-          ),
+          _buildProductHeader(colorScheme, textTheme),
           Expanded(
             child: BlocConsumer<ChatBloc, ChatState>(
               listener: (context, state) {
@@ -138,27 +192,13 @@ class _ChatViewState extends State<ChatView> {
                 } else if (state is ChatError) {
                   return ErrorView(message: state.errorMessage);
                 } else if (state is ChatLoaded) {
-                  return ListView.builder(
-                    controller: scrollController,
-                    itemCount: state.messages.length,
-                    itemBuilder: (context, index) {
-                      return _buildComment(
-                        message: state.messages[index],
-                        currentUsername: state.currentUsername,
-                      );
-                    },
-                  );
+                  return _buildMessageList(state);
                 }
                 return const SizedBox.shrink();
               },
             ),
           ),
-          Row(
-            children: [
-              Expanded(child: TextField(controller: textEditingController)),
-              IconButton.filled(onPressed: _send, icon: Icon(Icons.send)),
-            ],
-          ),
+          _buildInputBar(),
         ],
       ),
     );
