@@ -14,6 +14,7 @@ class ChatRepositoryImpl implements ChatRepository {
         .doc(productId)
         .collection('messages')
         .orderBy('createdAt', descending: true)
+        .limit(20)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
