@@ -17,6 +17,7 @@ import 'package:product_browser_app/features/chat/domain/usecases/get_or_generat
 import 'package:product_browser_app/features/chat/domain/usecases/send_message_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
+import 'package:product_browser_app/features/chat/presentation/bloc/message_count_cubit/message_counter_cubit.dart';
 import 'package:product_browser_app/features/product/data/product_repository_impl.dart';
 import 'package:product_browser_app/features/product/domain/repositories/product_repository.dart';
 import 'package:product_browser_app/features/product/domain/usecases/get_products_by_category_use_case.dart';
@@ -82,4 +83,5 @@ Future<void> setupLocator() async {
       getOrGenerateUsername: getIt(),
     ),
   );
+  getIt.registerFactory(() => MessageCounterCubit(watchMessages: getIt()));
 }

@@ -1,11 +1,14 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:product_browser_app/core/di/service_locator.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
 import 'package:product_browser_app/features/cart/domain/entities/cart_item.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_state.dart';
+import 'package:product_browser_app/features/chat/presentation/bloc/message_count_cubit/message_counter_cubit.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -116,18 +119,46 @@ class ProductDetailScreen extends StatelessWidget {
                         },
                       ),
                       SizedBox(width: 16),
-                      Container(
-                        decoration: ShapeDecoration(
-                          shape: CircleBorder(),
-                          color: colorScheme.primary,
-                        ),
+                      BlocProvider(
+                        create: (context) =>
+                            getIt<MessageCounterCubit>()
+                              ..watch(product.id.toString()),
+                        child:
+                            BlocBuilder<
+                              MessageCounterCubit,
+                              MessageCounterState
+                            >(
+                              builder: (context, state) {
+                                return badges.Badge(
+                                  position: .topEnd(top: -5, end: -8),
+                                  showBadge: state.count > 0,
+                                  badgeAnimation: badges.BadgeAnimation.slide(
+                                    toAnimate: false,
+                                  ),
+                                  badgeContent: Text(
+                                    '${state.count}',
+                                    style: textTheme.labelSmall?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
 
-                        child: IconButton(
-                          color: Colors.white,
-                          onPressed: () =>
-                              context.pushNamed('chat', extra: product),
-                          icon: Icon(Icons.chat),
-                        ),
+                                  child: Container(
+                                    decoration: ShapeDecoration(
+                                      shape: CircleBorder(),
+                                      color: colorScheme.primary,
+                                    ),
+                                    child: IconButton(
+                                      color: Colors.white,
+                                      onPressed: () => context.pushNamed(
+                                        'chat',
+                                        extra: product,
+                                      ),
+                                      icon: Icon(Icons.chat),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                       ),
                     ],
                   ),
