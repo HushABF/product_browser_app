@@ -27,8 +27,9 @@ class _ChatViewState extends State<ChatView> {
   }
 
   void _scrollToBottom() {
+    if (!scrollController.hasClients) return;
     scrollController.animateTo(
-      scrollController.position.maxScrollExtent,
+      0.0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
@@ -104,6 +105,7 @@ class _ChatViewState extends State<ChatView> {
 
   ListView _buildMessageList(ChatLoaded state) {
     return ListView.builder(
+      reverse: true,
       controller: scrollController,
       itemCount: state.messages.length,
       itemBuilder: (context, index) {
@@ -180,7 +182,7 @@ class _ChatViewState extends State<ChatView> {
               listener: (context, state) {
                 if (state is ChatLoaded &&
                     state.messages.isNotEmpty &&
-                    state.messages.last.senderUsername ==
+                    state.messages.first.senderUsername ==
                         state.currentUsername) {
                   WidgetsBinding.instance.addPostFrameCallback(
                     (_) => _scrollToBottom(),

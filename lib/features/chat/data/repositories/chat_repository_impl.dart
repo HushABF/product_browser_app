@@ -13,7 +13,7 @@ class ChatRepositoryImpl implements ChatRepository {
         .collection('chats')
         .doc(productId)
         .collection('messages')
-        .orderBy('createdAt')
+        .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
