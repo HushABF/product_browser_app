@@ -11,13 +11,15 @@ class MessageCounterCubit extends Cubit<MessageCounterState> {
   StreamSubscription? _sub;
 
   MessageCounterCubit({required WatchMessageCountUseCase watchMessageCount})
-      : _watchMessageCount = watchMessageCount,
-        super(const MessageCounterState(count: 0));
+    : _watchMessageCount = watchMessageCount,
+      super(const MessageCounterState(count: 0));
 
   void watch(String productId) {
     _sub?.cancel();
     _sub = _watchMessageCount(productId: productId).listen(
       (count) => emit(MessageCounterState(count: count)),
+      //Silent error , do nothing but won't crash
+      onError: (_) {},
     );
   }
 

@@ -75,7 +75,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onStreamError(_StreamError event, Emitter<ChatState> emit) =>
-      emit(ChatError(errorMessage: 'Failed to load'));
+      emit(ChatError(errorMessage: event.errorMessage));
 
   Future<void> _onLoadMore(
     LoadMoreMessages event,
