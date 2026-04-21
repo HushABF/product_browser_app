@@ -19,6 +19,12 @@ class ChatRepositoryImpl implements ChatRepository {
         .orderBy('createdAt', descending: true)
         .limit(20)
         .snapshots()
+        .handleError((error) {
+          if (error is FirebaseException) {
+            throw FirebaseExceptionHandler.handleFirebaseException(error);
+          }
+          throw FirebaseUnknownFailure(error.toString());
+        })
         .map(
           (snapshot) => snapshot.docs
               .map((doc) => MessageModel.fromFirestore(doc))

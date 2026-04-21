@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:product_browser_app/core/errors/failures.dart';
 import 'package:product_browser_app/features/chat/domain/entities/message_entity.dart';
 import 'package:product_browser_app/features/chat/domain/entities/user_entity.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/get_older_messages_use_case.dart';
@@ -45,7 +46,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         .call(productId: event.productId)
         .listen(
           (messages) => add(_NewMessage(messages: messages)),
-          onError: (_) => add(_StreamError()),
+          onError: (error) {
+            final message = error is Failure ? error.message : error.toString();
+            add(_StreamError(errorMessage: message));
+          },
         );
   }
 

@@ -33,7 +33,11 @@ final class _NewMessage extends ChatEvent {
   List<Object> get props => [messages];
 }
 
-final class _StreamError extends ChatEvent {}
+final class _StreamError extends ChatEvent {
+  final String errorMessage;
+
+  const _StreamError({required this.errorMessage});
+}
 
 final class LoadMoreMessages extends ChatEvent {
   final String productId;
