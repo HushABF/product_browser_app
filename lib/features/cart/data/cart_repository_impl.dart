@@ -9,7 +9,7 @@ class CartRepositoryImpl implements CartRepository {
   static const _key = 'cart_items';
 
   CartRepositoryImpl({required this.sharedPref});
-
+ //TODO: add error handling using cache failure
   @override
   Future<List<CartItem>> loadCart() async {
     final raw = sharedPref.getString(_key);
