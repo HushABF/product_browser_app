@@ -55,8 +55,7 @@ class NetworkFailure extends Failure {
 }
 
 class FirebasePermissionDeniedFailure extends Failure {
-  const FirebasePermissionDeniedFailure()
-    : super('Permission denied.');
+  const FirebasePermissionDeniedFailure() : super('Permission denied.');
 }
 
 class FirebaseUnavailableFailure extends Failure {
@@ -65,10 +64,13 @@ class FirebaseUnavailableFailure extends Failure {
 }
 
 class FirebaseNetworkFailure extends Failure {
-  const FirebaseNetworkFailure()
-    : super('No internet connection.');
+  const FirebaseNetworkFailure() : super('No internet connection.');
 }
 
 class FirebaseUnknownFailure extends Failure {
   const FirebaseUnknownFailure(super.message);
+}
+
+class CacheFailure extends Failure {
+  const CacheFailure(super.message);
 }

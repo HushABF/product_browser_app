@@ -39,7 +39,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   Future<void> _onWatch(WatchMessages event, Emitter<ChatState> emit) async {
-    _currentUser ??= await _getOrGenerateUsername();
+    if (_currentUser == null) {
+      final result = await _getOrGenerateUsername();
+      result.fold(
+        (failure) => emit(ChatError(errorMessage: failure.message)),
+        (user) => _currentUser = user,
+      );
+      if (_currentUser == null) return; // failed, stop here
+    }
     _sub?.cancel();
     emit(ChatLoading());
     _sub = _watchMessages
@@ -61,7 +68,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   );
 
   Future<void> _onSend(SendMessage event, Emitter<ChatState> emit) async {
-    _currentUser ??= await _getOrGenerateUsername();
+    if (_currentUser == null) {
+      final result = await _getOrGenerateUsername();
+      result.fold(
+        (failure) => emit(ChatError(errorMessage: failure.message)),
+        (user) => _currentUser = user,
+      );
+      if (_currentUser == null) return; // failed, stop here
+    }
     final result = await _sendMessage(
       productId: event.productId,
       senderUsername: _currentUser!.userName,
