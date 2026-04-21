@@ -58,10 +58,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   Future<void> _onSend(SendMessage event, Emitter<ChatState> emit) async {
     _currentUser ??= await _getOrGenerateUsername();
-    await _sendMessage(
+    final result = await _sendMessage(
       productId: event.productId,
       senderUsername: _currentUser!.userName,
       text: event.text,
+    );
+
+    result.fold(
+      (failure) => emit(ChatError(errorMessage: failure.message)),
+      (_) => {},
     );
   }
 
@@ -88,18 +93,23 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       before: event.before,
       limit: 20,
     );
-    final hasMore = olderMessages.length == 20;
-    final List<MessageEntity> mergedMessages = [
-      ...currentState.messages,
-      ...olderMessages,
-    ];
-    emit(
-      ChatLoaded(
-        messages: mergedMessages,
-        currentUsername: currentState.currentUsername,
-        hasMore: hasMore,
-        isLoadingMore: false,
-      ),
+    olderMessages.fold(
+      (failure) => emit(ChatError(errorMessage: failure.message)),
+      (olderMessages) {
+        final hasMore = olderMessages.length == 20;
+        final List<MessageEntity> mergedMessages = [
+          ...currentState.messages,
+          ...olderMessages,
+        ];
+        emit(
+          ChatLoaded(
+            messages: mergedMessages,
+            currentUsername: currentState.currentUsername,
+            hasMore: hasMore,
+            isLoadingMore: false,
+          ),
+        );
+      },
     );
   }
 
