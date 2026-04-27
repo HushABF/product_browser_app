@@ -3,7 +3,10 @@ import 'package:get_it/get_it.dart';
 import 'package:product_browser_app/core/network/dio_client.dart';
 import 'package:product_browser_app/features/cart/data/cart_repository_impl.dart';
 import 'package:product_browser_app/features/cart/domain/repositories/cart_repository.dart';
+import 'package:product_browser_app/features/cart/domain/usecases/add_to_cart_use_case.dart';
+import 'package:product_browser_app/features/cart/domain/usecases/decrement_cart_item_use_case.dart';
 import 'package:product_browser_app/features/cart/domain/usecases/get_cart_use_case.dart';
+import 'package:product_browser_app/features/cart/domain/usecases/remove_from_cart_use_case.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:product_browser_app/features/category/data/category_repository_impl.dart';
 import 'package:product_browser_app/features/category/domain/repositories/category_repository.dart';
@@ -44,7 +47,7 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton(
     () => GetProductsByCategoryUseCase(getIt<ProductRepository>()),
   );
-  getIt.registerFactory(() => ProductBloc(getIt()));
+  getIt.registerFactory(() => ProductBloc(getProductsByCategory: getIt()));
 
   // Category
   getIt.registerLazySingleton<CategoryRepository>(
@@ -60,7 +63,21 @@ Future<void> setupLocator() async {
     () => CartRepositoryImpl(sharedPref: getIt()),
   );
   getIt.registerLazySingleton(() => GetCartUseCase(getIt<CartRepository>()));
-  getIt.registerLazySingleton(() => CartCubit(getIt(), getIt()));
+  getIt.registerLazySingleton(() => AddToCartUseCase(getIt<CartRepository>()));
+  getIt.registerLazySingleton(
+    () => DecrementCartItemUseCase(getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => RemoveFromCartUseCase(getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => CartCubit(
+      getCart: getIt(),
+      addToCart: getIt(),
+      decrementCartItem: getIt(),
+      removeFromCart: getIt(),
+    ),
+  );
 
   // Chat
   getIt.registerLazySingleton<ChatRepository>(
@@ -92,7 +109,5 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton(
     () => WatchMessageCountUseCase(getIt<ChatRepository>()),
   );
-  getIt.registerFactory(
-    () => MessageCounterCubit(watchMessageCount: getIt()),
-  );
+  getIt.registerFactory(() => MessageCounterCubit(watchMessageCount: getIt()));
 }

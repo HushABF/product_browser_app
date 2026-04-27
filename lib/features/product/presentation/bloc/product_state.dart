@@ -16,12 +16,16 @@ final class ProductLoading extends ProductState {
 }
 
 final class ProductSuccess extends ProductState {
-  final List<ProductEntity> products;
+  final List<ProductEntity> allProducts;
+  final List<ProductEntity> searchedProducts;
 
-  const ProductSuccess(this.products);
+  const ProductSuccess({
+    required this.allProducts,
+    required this.searchedProducts,
+  });
 
   @override
-  List<Object> get props => [products];
+  List<Object> get props => [allProducts, searchedProducts];
 }
 
 final class ProductError extends ProductState {

@@ -8,16 +8,15 @@ part 'product_state.dart';
 
 /// Bloc that manages product listing and local search.
 ///
-/// Two events share internal state:
-/// - [FetchProductsByCategory] hits the API and stores results in [_allProducts]
-/// - [SearchProducts] filters [_allProducts] locally — no extra API call
-///
-/// This inter-event dependency is why this is a Bloc, not a Cubit.
+/// - [FetchProductsByCategory] hits the API and stores results in [ProductSuccess.allProducts]
+/// - [SearchProducts] filters [ProductSuccess.allProducts] locally — no extra API call
+///   and is a no-operation if the current state is not [ProductSuccess]
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final GetProductsByCategoryUseCase _getProductsByCategory;
-  List<ProductEntity> _allProducts = [];
 
-  ProductBloc(this._getProductsByCategory) : super(const ProductInitial()) {
+  ProductBloc({required GetProductsByCategoryUseCase getProductsByCategory})
+      : _getProductsByCategory = getProductsByCategory,
+        super(const ProductInitial()) {
     on<FetchProductsByCategory>(_onFetchProductsByCategory);
     on<SearchProducts>(_onSearchProducts);
   }
@@ -29,19 +28,28 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(const ProductLoading());
     final result = await _getProductsByCategory(event.slug);
     result.fold((failure) => emit(ProductError(failure.message)), (products) {
-      _allProducts = products;
-      emit(ProductSuccess(products));
+      emit(ProductSuccess(allProducts: products, searchedProducts: products));
     });
   }
 
   void _onSearchProducts(SearchProducts event, Emitter<ProductState> emit) {
-    if (event.query.isEmpty) {
-      emit(ProductSuccess(_allProducts));
-      return;
-    }
-    final filtered = _allProducts
-        .where((p) => p.title.toLowerCase().contains(event.query.toLowerCase()))
-        .toList();
-    emit(ProductSuccess(filtered));
+    if (state is! ProductSuccess) return;
+    final current = state as ProductSuccess;
+    final filtered = event.query.isEmpty
+        ? current.allProducts
+        : current.allProducts
+              .where(
+                (product) => product.title.toLowerCase().contains(
+                  event.query.toLowerCase(),
+                ),
+              )
+              .toList();
+    emit(
+      ProductSuccess(
+        allProducts: current.allProducts,
+        searchedProducts: filtered,
+      ),
+    );
+    
   }
 }
