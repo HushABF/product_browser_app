@@ -65,20 +65,21 @@ class _ProductViewState extends State<ProductView> {
                     FetchProductsByCategory(widget.categorySlug),
                   ),
                 ),
-                ProductSuccess(:final products) => RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<ProductBloc>().add(
-                      FetchProductsByCategory(widget.categorySlug),
-                    );
-                    await context.read<ProductBloc>().stream.firstWhere(
-                      (s) => s is! ProductLoading,
-                    );
-                  },
-                  child: ProductGrid(
-                    products: products,
-                    categorySlug: widget.categorySlug,
+                ProductSuccess(searchedProducts: final products) =>
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<ProductBloc>().add(
+                        FetchProductsByCategory(widget.categorySlug),
+                      );
+                      await context.read<ProductBloc>().stream.firstWhere(
+                        (s) => s is! ProductLoading,
+                      );
+                    },
+                    child: ProductGrid(
+                      products: products,
+                      categorySlug: widget.categorySlug,
+                    ),
                   ),
-                ),
               },
             ),
           ),
