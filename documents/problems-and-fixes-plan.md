@@ -1,13 +1,12 @@
 ##  Issues Found in Review (2026-04-27)
 
 ### Chat feature
-4. Duplicated `_currentUser` bootstrap — chat_bloc.dart:42-49 and chat_bloc.dart:71-78. Same null-check + fetch + emit-on-failure repeated in `_onWatch` and `_onSend`. Extract to a helper.
-5. Firebase API keys committed — firebase_options.dart is tracked in git and contains live API keys/App IDs. Violates CLAUDE.md §A6 (no hardcoded secrets). `.gitignore` doesn't exclude it.
-6. Large multi-responsibility widget — chat_view.dart handles scroll/pagination, send logic, message bubbles, product header, input bar, and BlocConsumer plumbing all in one file. Split into smaller widgets.
-7. Silent stream errors in counter — message_counter_cubit.dart:22 swallows errors. CLAUDE.md §A3 forbids silent failures — at minimum emit an error state.
+5. ✅ Firebase API keys committed — firebase_options.dart is tracked in git and contains live API keys/App IDs. Violates CLAUDE.md §A6 (no hardcoded secrets). `.gitignore` doesn't exclude it.
+6. ✅ Large multi-responsibility widget — chat_view.dart handles scroll/pagination, send logic, message bubbles, product header, input bar, and BlocConsumer plumbing all in one file. Split into smaller widgets.
+7. ✅ Silent stream errors in counter — message_counter_cubit.dart:22 swallows errors. CLAUDE.md §A3 forbids silent failures — at minimum emit an error state.
 
 ### Product feature
-8. Hidden state coupling on `_allProducts` — product_bloc.dart:18,37-46. `SearchProducts` silently returns empty when fired before fetch. Either guard explicitly, model search inside the loaded state, or make the query part of fetch.
+8. ✅ Hidden state coupling on `_allProducts` — product_bloc.dart:18,37-46. `SearchProducts` silently returns empty when fired before fetch. Either guard explicitly, model search inside the loaded state, or make the query part of fetch.
 
 ### Cart feature
 9. No loading/error state during cart load — cart_cubit.dart:11-18. State starts empty; `_load()` is async; UI flashes "Your cart is empty". Storage errors are also swallowed. Needs a sealed `CartState` with `Loading`/`Loaded`/`Error`.

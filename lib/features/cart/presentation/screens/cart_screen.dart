@@ -13,9 +13,10 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Cart')),
       body: BlocBuilder<CartCubit, CartState>(
-        builder: (context, state) {
-          if (state.items.isEmpty) {
-            return const Center(
+        builder: (context, state) => switch (state) {
+          CartLoading() => const Center(child: CircularProgressIndicator()),
+          CartError(:final message) => Center(child: Text(message)),
+          CartLoaded(:final items) when items.isEmpty => const Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -24,107 +25,104 @@ class CartScreen extends StatelessWidget {
                   Text('Your cart is empty'),
                 ],
               ),
-            );
-          }
-
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.items.length,
-                  itemBuilder: (context, index) {
-                    final item = state.items[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      child: ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: CachedNetworkImage(
-                            imageUrl: item.thumbnail,
-                            width: 56,
-                            height: 56,
-                            fit: BoxFit.cover,
-                            placeholder: (_, _) => Container(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.surfaceContainerHighest,
+            ),
+          CartLoaded(:final items, :final totalPrice) => Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        child: ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: CachedNetworkImage(
+                              imageUrl: item.thumbnail,
+                              width: 56,
+                              height: 56,
+                              fit: BoxFit.cover,
+                              placeholder: (_, _) => Container(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
+                              ),
+                              errorWidget: (_, _, _) =>
+                                  const Icon(Icons.broken_image),
                             ),
-                            errorWidget: (_, _, _) =>
-                                const Icon(Icons.broken_image),
+                          ),
+                          title: Text(
+                            item.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            '\$${(item.price * item.quantity).toStringAsFixed(2)}',
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () => context
+                                    .read<CartCubit>()
+                                    .decrementQuantity(item.productId),
+                              ),
+                              Text(
+                                '${item.quantity}',
+                                style: textTheme.titleMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () => context
+                                    .read<CartCubit>()
+                                    .addToCart(item.copyWith(quantity: 1)),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete_outline),
+                                onPressed: () => context
+                                    .read<CartCubit>()
+                                    .removeFromCart(item.productId),
+                              ),
+                            ],
                           ),
                         ),
-                        title: Text(
-                          item.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          '\$${(item.price * item.quantity).toStringAsFixed(2)}',
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: item.quantity > 1
-                                  ? () => context
-                                        .read<CartCubit>()
-                                        .decrementQuantity(item.productId)
-                                  : null,
-                            ),
-                            Text(
-                              '${item.quantity}',
-                              style: textTheme.titleMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () =>
-                                  context.read<CartCubit>().addToCart(item.copyWith(quantity: 1)),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              onPressed: () => context
-                                  .read<CartCubit>()
-                                  .removeFromCart(item.productId),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total',
-                        style: textTheme.titleMedium!.copyWith(
-                          fontWeight: .w600,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Text(
-                        '\$${state.totalPrice.toStringAsFixed(2)}',
-                        style: textTheme.titleMedium!.copyWith(
-                          fontWeight: .w700,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
-              ),
-            ],
-          );
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Total',
+                          style: textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          '\$${totalPrice.toStringAsFixed(2)}',
+                          style: textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
         },
       ),
     );

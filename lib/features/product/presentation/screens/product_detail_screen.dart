@@ -84,9 +84,10 @@ class ProductDetailScreen extends StatelessWidget {
                     children: [
                       BlocBuilder<CartCubit, CartState>(
                         builder: (context, state) {
-                          final inCart = state.items.any(
-                            (i) => i.productId == product.id,
-                          );
+                          final inCart = state is CartLoaded &&
+                              state.items.any(
+                                (i) => i.productId == product.id,
+                              );
                           return Center(
                             child: FilledButton.icon(
                               onPressed: () {
