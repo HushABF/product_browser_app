@@ -29,12 +29,6 @@ The previously committed fixes left several CLAUDE.md violations and latent bugs
 
 ## Phase 1 — Chat feature
 
-### #4 Duplicated `_currentUser` bootstrap — `lib/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart`
-Extract the username-loading block from `_onWatch` (L42-49) and `_onSend` (L71-78) into a private helper.
-
-**Options:**
-- **A (Recommended)** — `Future<bool> _ensureUser(Emitter<ChatState> emit)` returns `false` on failure (after emitting `ChatError`); both handlers early-return on `false`. Minimal change, no API impact.
-- **B** — Move username bootstrap into bloc construction via a one-shot init event dispatched from `ChatScreen`. Removes the per-handler check entirely but couples startup to the UI.
 
 ### #5 Firebase secrets committed — `lib/firebase_options.dart`
 **Options:**
