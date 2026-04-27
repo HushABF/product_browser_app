@@ -129,14 +129,19 @@ class ProductDetailScreen extends StatelessWidget {
                               MessageCounterState
                             >(
                               builder: (context, state) {
+                                final count = state is MessageCounterLoaded
+                                    ? state.count
+                                    : 0;
                                 return badges.Badge(
                                   position: .topEnd(top: -5, end: -8),
-                                  showBadge: state.count > 0,
+                                  showBadge:
+                                      state is MessageCounterLoaded &&
+                                      count > 0,
                                   badgeAnimation: badges.BadgeAnimation.slide(
                                     toAnimate: false,
                                   ),
                                   badgeContent: Text(
-                                    '${state.count}',
+                                    '$count',
                                     style: textTheme.labelSmall?.copyWith(
                                       color: Colors.white,
                                     ),
