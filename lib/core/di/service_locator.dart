@@ -47,7 +47,7 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton(
     () => GetProductsByCategoryUseCase(getIt<ProductRepository>()),
   );
-  getIt.registerFactory(() => ProductBloc(getIt()));
+  getIt.registerFactory(() => ProductBloc(getProductsByCategory: getIt()));
 
   // Category
   getIt.registerLazySingleton<CategoryRepository>(

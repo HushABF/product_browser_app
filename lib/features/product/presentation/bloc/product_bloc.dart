@@ -14,7 +14,9 @@ part 'product_state.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final GetProductsByCategoryUseCase _getProductsByCategory;
 
-  ProductBloc(this._getProductsByCategory) : super(const ProductInitial()) {
+  ProductBloc({required GetProductsByCategoryUseCase getProductsByCategory})
+      : _getProductsByCategory = getProductsByCategory,
+        super(const ProductInitial()) {
     on<FetchProductsByCategory>(_onFetchProductsByCategory);
     on<SearchProducts>(_onSearchProducts);
   }

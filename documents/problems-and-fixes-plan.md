@@ -9,14 +9,14 @@
 8. ✅ Hidden state coupling on `_allProducts` — product_bloc.dart:18,37-46. `SearchProducts` silently returns empty when fired before fetch. Either guard explicitly, model search inside the loaded state, or make the query part of fetch.
 
 ### Cart feature
-9. No loading/error state during cart load — cart_cubit.dart:11-18. State starts empty; `_load()` is async; UI flashes "Your cart is empty". Storage errors are also swallowed. Needs a sealed `CartState` with `Loading`/`Loaded`/`Error`.
-10. Business logic leakage into UI — cart_screen.dart:72-76. The `quantity > 1` rule lives in the widget. Move to the cubit (e.g., `decrementQuantity` no-ops or removes when at 1).
-11. Cubit depends on repository, not use cases — cart_cubit.dart:11 takes `CartRepository` directly and calls `_repository.saveCart`. CLAUDE.md §B1 mandates "Cubits depend ONLY on use cases." Add `SaveCartUseCase` (and use cases for add/remove/update if appropriate) and remove the repo dependency.
-12. Repository doesn't return `Either<Failure, T>` — cart_repository.dart returns raw `Future<List<CartItem>>` / `Future<void>`. CLAUDE.md §B5 requires `Either<Failure, T>` from domain. The `// TODO: add error handling using cache failure` comment in cart_repository_impl.dart:12 confirms it's unfinished. Also no try/catch around `jsonDecode`/`SharedPreferences`.
-13. `GetCartUseCase` returns raw list — get_cart_use_case.dart:9 — same `Either` violation; will follow once the repo contract is fixed.
+9. ✅ No loading/error state during cart load — cart_cubit.dart:11-18. State starts empty; `_load()` is async; UI flashes "Your cart is empty". Storage errors are also swallowed. Needs a sealed `CartState` with `Loading`/`Loaded`/`Error`.
+10. ✅ Business logic leakage into UI — cart_screen.dart:72-76. The `quantity > 1` rule lives in the widget. Move to the cubit (e.g., `decrementQuantity` no-ops or removes when at 1).
+11. ✅ Cubit depends on repository, not use cases — cart_cubit.dart:11 takes `CartRepository` directly and calls `_repository.saveCart`. CLAUDE.md §B1 mandates "Cubits depend ONLY on use cases." Add `SaveCartUseCase` (and use cases for add/remove/update if appropriate) and remove the repo dependency.
+12. ✅ Repository doesn't return `Either<Failure, T>` — cart_repository.dart returns raw `Future<List<CartItem>>` / `Future<void>`. CLAUDE.md §B5 requires `Either<Failure, T>` from domain. The `// TODO: add error handling using cache failure` comment in cart_repository_impl.dart:12 confirms it's unfinished. Also no try/catch around `jsonDecode`/`SharedPreferences`.
+13. ✅ `GetCartUseCase` returns raw list — get_cart_use_case.dart:9 — same `Either` violation; will follow once the repo contract is fixed.
 
 ### Cross-cutting
-14. `ProductBloc` constructor uses positional unnamed deps — minor; not a CLAUDE.md violation but inconsistent with other blocs/use cases that use named params.
+14. ✅ `ProductBloc` constructor uses positional unnamed deps — minor; not a CLAUDE.md violation but inconsistent with other blocs/use cases that use named params.
 
 ---
 
