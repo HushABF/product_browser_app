@@ -1,13 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/di/service_locator.dart';
 import 'package:product_browser_app/core/routes/app_router.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
-import 'package:product_browser_app/features/cart/domain/repositories/cart_repository.dart';
-import 'package:product_browser_app/features/cart/domain/usecases/get_cart_use_case.dart';
+import 'package:product_browser_app/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupLocator();
   runApp(const ProductBrowserApp());
 }
@@ -19,7 +20,7 @@ class ProductBrowserApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CartCubit>(create: (_) => CartCubit(getIt<CartRepository>(), getIt<GetCartUseCase>())),
+        BlocProvider<CartCubit>(create: (_) => getIt<CartCubit>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

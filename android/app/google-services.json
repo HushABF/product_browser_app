@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "999816840421",
+    "project_id": "product-browse-app",
+    "storage_bucket": "product-browse-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999816840421:android:e8e2761fbd7a178006000c",
+        "android_client_info": {
+          "package_name": "com.example.product_browser_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9cFTIhut62e7JeasOFg0D-kyHm4XfU-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

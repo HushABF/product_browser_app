@@ -7,7 +7,6 @@ import 'review.dart';
 class ProductModel extends ProductEntity {
   final String category;
   final double? discountPercentage;
-  final double rating;
   final int stock;
   final List<String>? tags;
   final String? brand;
@@ -27,11 +26,11 @@ class ProductModel extends ProductEntity {
     required super.title,
     required super.description,
     required super.price,
+    required super.rating,
     required super.thumbnail,
     required super.images,
     required this.category,
     this.discountPercentage,
-    required this.rating,
     required this.stock,
     this.tags,
     this.brand,
