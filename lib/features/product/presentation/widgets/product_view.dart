@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
-import 'package:product_browser_app/core/widgets/error_view.dart';
 import 'package:product_browser_app/features/product/presentation/bloc/product_bloc.dart';
-import 'package:product_browser_app/features/product/presentation/widgets/product_grid.dart';
+import 'package:product_browser_app/features/product/presentation/widgets/product_view_body_bloc_builder.dart';
 
 class ProductView extends StatefulWidget {
   final String categorySlug;
@@ -26,6 +25,20 @@ class _ProductViewState extends State<ProductView> {
     });
   }
 
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: TextField(
+        decoration: const InputDecoration(
+          hintText: 'Search products...',
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(),
+        ),
+        onChanged: _onSearchChanged,
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _debounce?.cancel();
@@ -41,45 +54,10 @@ class _ProductViewState extends State<ProductView> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search products...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: _onSearchChanged,
-            ),
-          ),
+          _buildSearchBar(),
           Expanded(
-            child: BlocBuilder<ProductBloc, ProductState>(
-              builder: (context, state) => switch (state) {
-                ProductInitial() => const SizedBox.shrink(),
-                ProductLoading() => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                ProductError(:final message) => ErrorView(
-                  message: message,
-                  onRetry: () => context.read<ProductBloc>().add(
-                    FetchProductsByCategory(widget.categorySlug),
-                  ),
-                ),
-                ProductSuccess(:final products) => RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<ProductBloc>().add(
-                      FetchProductsByCategory(widget.categorySlug),
-                    );
-                    await context.read<ProductBloc>().stream.firstWhere(
-                      (s) => s is! ProductLoading,
-                    );
-                  },
-                  child: ProductGrid(
-                    products: products,
-                    categorySlug: widget.categorySlug,
-                  ),
-                ),
-              },
+            child: ProductViewBodyBlocBuilder(
+              categorySlug: widget.categorySlug,
             ),
           ),
         ],

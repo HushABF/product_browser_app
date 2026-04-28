@@ -13,11 +13,12 @@ class CartBadgeButton extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return BlocBuilder<CartCubit, CartState>(
       builder: (context, state) {
+        final count = state is CartLoaded ? state.itemCount : 0;
         return badges.Badge(
-          position: .topEnd(top: 3, end: 5),
-          showBadge: state.itemCount > 0,
+          position: badges.BadgePosition.topEnd(top: 3, end: 5),
+          showBadge: count > 0,
           badgeAnimation: badges.BadgeAnimation.slide(toAnimate: false),
-          badgeContent: Text('${state.itemCount}', style: textTheme.labelSmall),
+          badgeContent: Text('$count', style: textTheme.labelSmall),
           child: IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () => context.pushNamed('cart'),

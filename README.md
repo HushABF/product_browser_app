@@ -47,7 +47,14 @@ lib/
 ## Getting Started
 
 1. Clone the repo
-2. Set up a Firebase project and add `google-services.json` (Android) / `GoogleService-Info.plist` (iOS)
+2. Set up a Firebase project, then generate the required config files by running:
+   ```bash
+   dart pub global activate flutterfire_cli
+   flutterfire configure
+   ```
+   This generates `lib/firebase_options.dart` and the platform-specific files
+   (`android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, etc.).
+   These files are excluded from the repo — see `lib/firebase_options.dart.example` for the expected structure.
 3. Set Firestore rules:
 ```
 match /chats/{productId}/messages/{messageId} {
