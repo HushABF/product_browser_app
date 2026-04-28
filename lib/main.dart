@@ -19,9 +19,7 @@ class ProductBrowserApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<CartCubit>(create: (_) => getIt<CartCubit>()),
-      ],
+      providers: [BlocProvider<CartCubit>(create: (_) => getIt<CartCubit>())],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Product Browser',
