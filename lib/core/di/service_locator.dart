@@ -27,6 +27,11 @@ import 'package:product_browser_app/features/product/data/product_repository_imp
 import 'package:product_browser_app/features/product/domain/repositories/product_repository.dart';
 import 'package:product_browser_app/features/product/domain/usecases/get_products_by_category_use_case.dart';
 import 'package:product_browser_app/features/product/presentation/bloc/product_bloc.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/login_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/logout_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/register_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/update_profile_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/watch_auth_state_use_case.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -111,6 +116,11 @@ Future<void> setupLocator() async {
   );
   getIt.registerFactory(() => MessageCounterCubit(watchMessageCount: getIt()));
 
-  //Auth
-  
+  // Auth
+  // getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
+  getIt.registerLazySingleton(() => LoginUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(() => RegisterUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(() => LogoutUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(() => UpdateProfileUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(() => WatchAuthStateUseCase(authRepository: getIt()));
 }
