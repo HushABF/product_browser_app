@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:product_browser_app/core/network/dio_client.dart';
 import 'package:product_browser_app/features/cart/data/cart_repository_impl.dart';
@@ -42,6 +43,8 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
   );
+  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+
   final sharedPref = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPref);
 
@@ -121,6 +124,10 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton(() => LoginUseCase(authRepository: getIt()));
   getIt.registerLazySingleton(() => RegisterUseCase(authRepository: getIt()));
   getIt.registerLazySingleton(() => LogoutUseCase(authRepository: getIt()));
-  getIt.registerLazySingleton(() => UpdateProfileUseCase(authRepository: getIt()));
-  getIt.registerLazySingleton(() => WatchAuthStateUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(
+    () => UpdateProfileUseCase(authRepository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => WatchAuthStateUseCase(authRepository: getIt()),
+  );
 }
