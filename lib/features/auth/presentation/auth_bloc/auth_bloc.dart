@@ -41,6 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<RegisterRequested>(_onRegisterRequested);
     on<LogoutRequested>(_onLogoutRequested);
     on<ProfileUpdateRequested>(_onProfileUpdateRequested);
+    add(AuthStarted());
   }
 
   void _onAuthStarted(AuthStarted event, Emitter<AuthState> emit) {
