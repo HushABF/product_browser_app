@@ -110,4 +110,7 @@ Future<void> setupLocator() async {
     () => WatchMessageCountUseCase(getIt<ChatRepository>()),
   );
   getIt.registerFactory(() => MessageCounterCubit(watchMessageCount: getIt()));
+
+  //Auth
+  
 }

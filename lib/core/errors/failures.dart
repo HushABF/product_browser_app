@@ -74,3 +74,37 @@ class FirebaseUnknownFailure extends Failure {
 class CacheFailure extends Failure {
   const CacheFailure(super.message);
 }
+
+// Failure classes for Firebase Auth
+class InvalidCredentialsFailure extends Failure {
+  const InvalidCredentialsFailure() : super('Incorrect email or password.');
+}
+
+class EmailAlreadyInUseFailure extends Failure {
+  const EmailAlreadyInUseFailure()
+    : super('An account with this email already exists.');
+}
+
+class WeakPasswordFailure extends Failure {
+  const WeakPasswordFailure()
+    : super('Password must be at least 6 characters.');
+}
+
+class InvalidEmailFailure extends Failure {
+  const InvalidEmailFailure() : super('Please enter a valid email address.');
+}
+
+class UserDisabledFailure extends Failure {
+  const UserDisabledFailure()
+    : super('This account has been disabled. Contact support.');
+}
+
+class TooManyRequestsFailure extends Failure {
+  const TooManyRequestsFailure()
+    : super('Too many attempts. Please try again later.');
+}
+
+class ReauthRequiredFailure extends Failure {
+  const ReauthRequiredFailure()
+    : super('Please sign in again to update your profile.');
+}
