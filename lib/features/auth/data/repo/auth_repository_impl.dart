@@ -12,8 +12,8 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required FirebaseAuth auth}) : _auth = auth;
 
   @override
-  Stream<AppUser?> authStateChanges() {
-    return _auth.authStateChanges().map(
+  Stream<AppUser?> userChanges() {
+    return _auth.userChanges().map(
       (user) => user == null ? null : UserModel.fromFirebase(user),
     );
   }
@@ -71,8 +71,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, AppUser>> updateProfile({
-   required String? username,
-   required String? photoUrl,
+    required String? username,
+    required String? photoUrl,
   }) async {
     try {
       User currentUser = _auth.currentUser!;

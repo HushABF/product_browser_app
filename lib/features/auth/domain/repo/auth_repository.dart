@@ -3,7 +3,7 @@ import 'package:product_browser_app/core/errors/failures.dart';
 import 'package:product_browser_app/features/auth/domain/entities/app_user.dart';
 
 abstract class AuthRepository {
-  Stream<AppUser?> authStateChanges();
+  Stream<AppUser?> userChanges();
   Future<Either<Failure, AppUser>> registerWithEmailAndPassword(
     String email,
     String password,

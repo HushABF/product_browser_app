@@ -50,7 +50,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onUserChanged(UserChanged event, Emitter<AuthState> emit) {
-    if (_isRegistering) return;
+    if (_isRegistering) {
+      // wait until the stream delivers the user with displayName populated
+      if (event.user != null && event.user!.username.isNotEmpty) {
+        _isRegistering = false;
+        emit(AuthAuthenticated(user: event.user!));
+      }
+      return; // skip stale emissions
+    }
+
     if (event.user != null) {
       emit(AuthAuthenticated(user: event.user!));
     } else {
@@ -84,11 +92,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       password: event.password,
       username: event.username,
     );
-    result.fold(
-      (failure) => emit(AuthFailure(failure: failure)),
-      (user) => emit(AuthAuthenticated(user: user)),
-    );
-    _isRegistering = false;
+    result.fold((failure) {
+      _isRegistering = false; // no stream confirmation coming on failure
+      emit(AuthFailure(failure: failure));
+    }, (user) => emit(AuthAuthenticated(user: user)));
   }
 
   Future<void> _onLogoutRequested(

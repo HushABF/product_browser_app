@@ -7,6 +7,6 @@ class WatchAuthStateUseCase {
   WatchAuthStateUseCase({required this.authRepository});
 
   Stream<AppUser?> call() {
-    return authRepository.authStateChanges();
+    return authRepository.userChanges();
   }
 }
