@@ -9,8 +9,8 @@ class UpdateProfileUseCase {
   UpdateProfileUseCase({required this.authRepository});
 
   Future<Either<Failure, AppUser>> call({
-    String? username,
-    String? photoUrl,
+    required String? username,
+    required String? photoUrl,
   }) {
     return authRepository.updateProfile(username: username, photoUrl: photoUrl);
   }

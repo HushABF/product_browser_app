@@ -15,7 +15,7 @@ abstract class AuthRepository {
   );
   Future<Either<Failure, Unit>> logout();
   Future<Either<Failure, AppUser>> updateProfile({
-    String? username,
-    String? photoUrl,
+    required String? username,
+    required String? photoUrl,
   });
 }

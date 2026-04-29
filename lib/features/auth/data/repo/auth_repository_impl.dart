@@ -71,8 +71,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, AppUser>> updateProfile({
-    String? username,
-    String? photoUrl,
+   required String? username,
+   required String? photoUrl,
   }) async {
     try {
       User currentUser = _auth.currentUser!;

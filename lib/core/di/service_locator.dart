@@ -29,6 +29,7 @@ import 'package:product_browser_app/features/product/domain/repositories/product
 import 'package:product_browser_app/features/product/domain/usecases/get_products_by_category_use_case.dart';
 import 'package:product_browser_app/features/product/presentation/bloc/product_bloc.dart';
 import 'package:product_browser_app/features/auth/data/repo/auth_repository_impl.dart';
+import 'package:product_browser_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:product_browser_app/features/auth/domain/repo/auth_repository.dart';
 import 'package:product_browser_app/features/auth/domain/usecases/login_use_case.dart';
 import 'package:product_browser_app/features/auth/domain/usecases/logout_use_case.dart';
@@ -133,5 +134,14 @@ Future<void> setupLocator() async {
   );
   getIt.registerLazySingleton(
     () => WatchAuthStateUseCase(authRepository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => AuthBloc(
+      watchAuthState: getIt(),
+      login: getIt(),
+      register: getIt(),
+      logout: getIt(),
+      updateProfile: getIt(),
+    ),
   );
 }
