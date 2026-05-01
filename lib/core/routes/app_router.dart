@@ -26,7 +26,9 @@ final appRouter = GoRouter(
       return currentLocation == '/splash' ? null : '/splash';
     }
     if (authState is AuthUnauthenticated) {
-      return authOnlyRoutes.contains(currentLocation) ? null : '/login';
+      return (currentLocation == '/login' || currentLocation == '/register')
+          ? null
+          : '/login';
     }
     if (authState is AuthAuthenticated || authState is AuthUpdating) {
       return authOnlyRoutes.contains(currentLocation) ? '/' : null;
