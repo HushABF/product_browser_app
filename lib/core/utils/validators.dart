@@ -2,7 +2,7 @@ class Validators {
   static final _emailRegex = RegExp(r'^[\w\.\-]+@[\w\-]+\.[\w\.]+$');
   static final _usernameRegex = RegExp(r'^[a-zA-Z0-9_]{3,20}$');
 
-  String? validateEmail(String? input) {
+  static String? validateEmail(String? input) {
     if (input == null || input.trim().isEmpty) {
       return 'Email is required';
     }
@@ -13,13 +13,13 @@ class Validators {
     return null;
   }
 
-  String? validatePassword(String? input) {
+  static String? validatePassword(String? input) {
     if (input == null || input.isEmpty) return 'Password is required';
     if (input.length < 6) return 'Password must at least 6 digits';
     return null;
   }
 
-  String? validateUsername(String? input) {
+  static String? validateUsername(String? input) {
     if (input == null || input.trim().isEmpty) {
       return 'Username is required';
     }
