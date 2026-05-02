@@ -2,14 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class DontHaveAccountText extends StatefulWidget {
-  const DontHaveAccountText({super.key});
+class AlreadyHaveAccountText extends StatefulWidget {
+  const AlreadyHaveAccountText({super.key});
 
   @override
-  State<DontHaveAccountText> createState() => _DontHaveAccountTextState();
+  State<AlreadyHaveAccountText> createState() => _AlreadyHaveAccountTextState();
 }
 
-class _DontHaveAccountTextState extends State<DontHaveAccountText> {
+class _AlreadyHaveAccountTextState extends State<AlreadyHaveAccountText> {
   final tapGestureRecognizer = TapGestureRecognizer();
 
   @override
@@ -24,15 +24,15 @@ class _DontHaveAccountTextState extends State<DontHaveAccountText> {
       text: TextSpan(
         children: [
           TextSpan(
-            text: 'Dont have an account?',
+            text: 'Already have an account?',
             style: TextStyle(color: Colors.black),
           ),
           TextSpan(
-            text: ' Create one.',
+            text: ' Login.',
             style: TextStyle(color: Colors.blue),
             recognizer: tapGestureRecognizer
               ..onTap = () {
-                context.go('/register');
+                context.go('/login');
               },
           ),
         ],
