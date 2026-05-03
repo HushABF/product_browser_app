@@ -60,7 +60,7 @@ class _EmailAndPasswordAndUsernameFormState
           AppTextFormField(
             controller: widget._usernameController,
             hintText: 'Username',
-            validator: Validators.validateEmail,
+            validator: Validators.validateUsername,
           ),
         ],
       ),

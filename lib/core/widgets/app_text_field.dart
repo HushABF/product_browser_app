@@ -63,7 +63,7 @@ class AppTextFormField extends StatelessWidget {
         filled: true,
       ),
       obscureText: isObscureText ?? false,
-      style: TextStyle(color: Colors.grey, fontSize: 14),
+      style: TextStyle(color: Colors.black, fontSize: 14),
       validator: (value) {
         return validator(value);
       },

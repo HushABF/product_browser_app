@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:product_browser_app/core/widgets/cart_badge_button.dart';
 import 'package:product_browser_app/core/widgets/error_view.dart';
 import 'package:product_browser_app/features/category/presentation/cubit/category_cubit.dart';
@@ -12,6 +13,12 @@ class CategoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.push('/profile');
+          },
+          icon: const Icon(Icons.person),
+        ),
         title: const Text('Browse Categories'),
         actions: const [CartBadgeButton()],
       ),
