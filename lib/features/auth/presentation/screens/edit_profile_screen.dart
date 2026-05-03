@@ -113,6 +113,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             }
                           : null,
                     ),
+                    SizedBox(height: 32),
+                    AppTextButton(
+                      buttonText: 'Logout',
+                      textStyle: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                      onPressed: isUpdating
+                          ? null
+                          : () {
+                              context.read<AuthBloc>().add(LogoutRequested());
+                            },
+                    ),
                   ],
                 );
               },
