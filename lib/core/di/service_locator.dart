@@ -14,11 +14,8 @@ import 'package:product_browser_app/features/category/domain/repositories/catego
 import 'package:product_browser_app/features/category/domain/usecases/get_categories_use_case.dart';
 import 'package:product_browser_app/features/category/presentation/cubit/category_cubit.dart';
 import 'package:product_browser_app/features/chat/data/repositories/chat_repository_impl.dart';
-import 'package:product_browser_app/features/chat/data/repositories/user_repository_impl.dart';
 import 'package:product_browser_app/features/chat/domain/repositories/chat_repository.dart';
-import 'package:product_browser_app/features/chat/domain/repositories/user_repository.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/get_older_messages_use_case.dart';
-import 'package:product_browser_app/features/chat/domain/usecases/get_or_generate_username_usecase.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/send_message_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_message_count_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
@@ -94,18 +91,14 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton<ChatRepository>(
     () => ChatRepositoryImpl(firestore: getIt()),
   );
-  getIt.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(sharedPref: getIt()),
-  );
+
   getIt.registerLazySingleton(
     () => WatchMessagesUseCase(chatRepository: getIt()),
   );
   getIt.registerLazySingleton(
     () => SendMessageUseCase(chatRepository: getIt()),
   );
-  getIt.registerLazySingleton(
-    () => GetOrGenerateUsernameUsecase(userRepository: getIt()),
-  );
+
   getIt.registerLazySingleton(
     () => GetOlderMessagesUseCase(chatRepository: getIt()),
   );
@@ -113,7 +106,6 @@ Future<void> setupLocator() async {
     () => ChatBloc(
       watchMessages: getIt(),
       sendMessage: getIt(),
-      getOrGenerateUsername: getIt(),
       getOlderMessages: getIt(),
     ),
   );

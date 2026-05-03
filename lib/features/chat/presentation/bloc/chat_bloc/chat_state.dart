@@ -13,19 +13,19 @@ final class ChatLoading extends ChatState {}
 
 final class ChatLoaded extends ChatState {
   final List<MessageEntity> messages;
-  final String currentUsername;
+  final String currentUserId;
   final bool hasMore;
   final bool isLoadingMore;
 
   const ChatLoaded({
     required this.messages,
-    required this.currentUsername,
+    required this.currentUserId,
     this.hasMore = true,
     this.isLoadingMore = false,
   });
 
   @override
-  List<Object> get props => [messages, currentUsername, hasMore, isLoadingMore];
+  List<Object> get props => [messages, currentUserId, hasMore, isLoadingMore];
 }
 
 final class ChatError extends ChatState {

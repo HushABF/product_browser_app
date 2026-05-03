@@ -26,7 +26,7 @@ class ChatMessageList extends StatelessWidget {
         }
         return MessageBubble(
           message: state.messages[index],
-          currentUsername: state.currentUsername,
+          currentUserId: state.currentUserId,
         );
       },
     );

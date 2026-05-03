@@ -3,25 +3,26 @@ import 'package:product_browser_app/features/chat/domain/entities/message_entity
 
 class MessageBubble extends StatelessWidget {
   final MessageEntity message;
-  final String currentUsername;
+  final String currentUserId;
 
   const MessageBubble({
     super.key,
     required this.message,
-    required this.currentUsername,
+    required this.currentUserId,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final isMe = message.senderUsername == currentUsername;
+    final isMe = message.senderId == currentUserId;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       child: Column(
-        crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           if (!isMe) Text(message.senderUsername, style: textTheme.bodySmall),
           Container(
