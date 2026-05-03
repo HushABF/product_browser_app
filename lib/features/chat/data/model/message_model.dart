@@ -6,6 +6,7 @@ class MessageModel extends MessageEntity {
     required super.id,
     required super.productId,
     required super.senderUsername,
+    required super.senderId,
     required super.text,
     required super.createdAt,
   });
@@ -16,6 +17,7 @@ class MessageModel extends MessageEntity {
       id: doc.id,
       productId: data['productId'],
       senderUsername: data['senderUsername'],
+      senderId: data['senderId'],
       text: data['text'],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -24,6 +26,7 @@ class MessageModel extends MessageEntity {
   Map<String, dynamic> toMap() => {
     'productId': productId,
     'senderUsername': senderUsername,
+    'senderId': senderId,
     'text': text,
     'createdAt': FieldValue.serverTimestamp(),
   };

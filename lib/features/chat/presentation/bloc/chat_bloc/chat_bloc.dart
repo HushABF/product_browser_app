@@ -4,9 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/errors/failures.dart';
 import 'package:product_browser_app/features/chat/domain/entities/message_entity.dart';
-import 'package:product_browser_app/features/chat/domain/entities/user_entity.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/get_older_messages_use_case.dart';
-import 'package:product_browser_app/features/chat/domain/usecases/get_or_generate_username_usecase.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/send_message_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
 
@@ -16,18 +14,16 @@ part 'chat_state.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final WatchMessagesUseCase _watchMessages;
   final SendMessageUseCase _sendMessage;
-  final GetOrGenerateUsernameUsecase _getOrGenerateUsername;
   final GetOlderMessagesUseCase _getOlderMessages;
-  UserEntity? _currentUser;
+  late String _currentUserId;
+  late String _currentUsername;
   StreamSubscription<List<MessageEntity>>? _sub;
 
   ChatBloc({
     required WatchMessagesUseCase watchMessages,
     required SendMessageUseCase sendMessage,
-    required GetOrGenerateUsernameUsecase getOrGenerateUsername,
     required GetOlderMessagesUseCase getOlderMessages,
   }) : _getOlderMessages = getOlderMessages,
-       _getOrGenerateUsername = getOrGenerateUsername,
        _watchMessages = watchMessages,
        _sendMessage = sendMessage,
        super(ChatInitial()) {
@@ -39,14 +35,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   Future<void> _onWatch(WatchMessages event, Emitter<ChatState> emit) async {
-    if (_currentUser == null) {
-      final result = await _getOrGenerateUsername();
-      result.fold(
-        (failure) => emit(ChatError(errorMessage: failure.message)),
-        (user) => _currentUser = user,
-      );
-      if (_currentUser == null) return; // failed, stop here
-    }
+    _currentUserId = event.currentUserId;
+    _currentUsername = event.currentUsername;
     _sub?.cancel();
     emit(ChatLoading());
     _sub = _watchMessages
@@ -60,25 +50,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         );
   }
 
-  void _onNewMessages(_NewMessage event, Emitter<ChatState> emit) => emit(
-    ChatLoaded(
-      messages: event.messages,
-      currentUsername: _currentUser!.userName,
-    ),
-  );
+  void _onNewMessages(_NewMessage event, Emitter<ChatState> emit) =>
+      emit(ChatLoaded(messages: event.messages, currentUserId: _currentUserId));
 
   Future<void> _onSend(SendMessage event, Emitter<ChatState> emit) async {
-    if (_currentUser == null) {
-      final result = await _getOrGenerateUsername();
-      result.fold(
-        (failure) => emit(ChatError(errorMessage: failure.message)),
-        (user) => _currentUser = user,
-      );
-      if (_currentUser == null) return; // failed, stop here
-    }
     final result = await _sendMessage(
       productId: event.productId,
-      senderUsername: _currentUser!.userName,
+      senderUsername: _currentUsername,
+      senderId: _currentUserId,
       text: event.text,
     );
 
@@ -101,7 +80,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(
       ChatLoaded(
         messages: currentState.messages,
-        currentUsername: currentState.currentUsername,
+        currentUserId: _currentUserId,
         hasMore: currentState.hasMore,
         isLoadingMore: true,
       ),
@@ -122,7 +101,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(
           ChatLoaded(
             messages: mergedMessages,
-            currentUsername: currentState.currentUsername,
+            currentUserId: _currentUserId,
             hasMore: hasMore,
             isLoadingMore: false,
           ),
