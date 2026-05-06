@@ -31,6 +31,16 @@ final class AuthUpdating extends AuthState {
   List<Object> get props => [user];
 }
 
+final class AuthUpdatingFailure extends AuthState {
+  final AppUser user;
+  final Failure failure;
+
+  const AuthUpdatingFailure({required this.user, required this.failure});
+
+  @override
+  List<Object> get props => [user, failure];
+}
+
 final class AuthFailure extends AuthState {
   final Failure failure;
 

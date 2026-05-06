@@ -111,16 +111,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ProfileUpdateRequested event,
     Emitter<AuthState> emit,
   ) async {
-    if (state is! AuthAuthenticated) return;
-    final currentUser = (state as AuthAuthenticated).user;
+    final AppUser currentUser;
+    if (state is AuthAuthenticated) {
+      currentUser = (state as AuthAuthenticated).user;
+    } else if (state is AuthUpdatingFailure) {
+      currentUser = (state as AuthUpdatingFailure).user;
+    } else {
+      return;
+    }
     emit(AuthUpdating(user: currentUser));
     final result = await _updateProfile.call(
       username: event.username,
       photoUrl: event.photoUrl,
     );
     result.fold((failure) {
-      emit(AuthFailure(failure: failure));
-      emit(AuthAuthenticated(user: currentUser)); // restore
+      emit(AuthUpdatingFailure(user: currentUser, failure: failure));
     }, (updatedUser) => emit(AuthAuthenticated(user: updatedUser)));
   }
 

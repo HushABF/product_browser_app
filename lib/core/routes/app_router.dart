@@ -30,7 +30,9 @@ final appRouter = GoRouter(
           ? null
           : '/login';
     }
-    if (authState is AuthAuthenticated || authState is AuthUpdating) {
+    if (authState is AuthAuthenticated ||
+        authState is AuthUpdating ||
+        authState is AuthUpdatingFailure) {
       return authOnlyRoutes.contains(currentLocation) ? '/' : null;
     }
     return null;
