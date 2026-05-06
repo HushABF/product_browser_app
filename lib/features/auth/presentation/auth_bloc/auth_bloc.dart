@@ -104,6 +104,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     final result = await _logout.call();
+    // Success path: auth stream emits null → UserChanged → AuthUnauthenticated.
+    // We don't emit here to avoid racing with / duplicating the stream emission.
     result.fold((failure) => emit(AuthFailure(failure: failure)), (_) {});
   }
 
