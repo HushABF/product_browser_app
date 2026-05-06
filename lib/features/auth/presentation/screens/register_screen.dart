@@ -70,7 +70,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: isLoading
                           ? null
                           : () {
-                              if (!_formKey.currentState!.validate()) return;
+                              if (!(_formKey.currentState?.validate() ??
+                                  false)) {
+                                return;
+                              }
                               final email = _emailController.text.trim();
                               final password = _passwordController.text;
                               final username = _usernameController.text.trim();

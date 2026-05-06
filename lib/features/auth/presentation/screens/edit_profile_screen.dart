@@ -102,7 +102,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ).textTheme.bodyMedium!.copyWith(color: Colors.white),
                       onPressed: (_canSave && !isUpdating)
                           ? () {
-                              if (!_formKey.currentState!.validate()) return;
+                              if (!(_formKey.currentState?.validate() ??
+                                  false)) {
+                                return;
+                              }
                               final username = _usernameController.text.trim();
                               context.read<AuthBloc>().add(
                                 ProfileUpdateRequested(

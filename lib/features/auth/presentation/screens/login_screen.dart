@@ -70,7 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: isLoading
                           ? null
                           : () {
-                              if (!_formKey.currentState!.validate()) return;
+                              if (!(_formKey.currentState?.validate() ??
+                                  false)) {
+                                return;
+                              }
                               final email = _emailController.text.trim();
                               final password = _passwordController.text;
                               context.read<AuthBloc>().add(
