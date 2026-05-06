@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:product_browser_app/core/network/dio_client.dart';
 import 'package:product_browser_app/features/cart/data/cart_repository_impl.dart';
@@ -13,11 +14,8 @@ import 'package:product_browser_app/features/category/domain/repositories/catego
 import 'package:product_browser_app/features/category/domain/usecases/get_categories_use_case.dart';
 import 'package:product_browser_app/features/category/presentation/cubit/category_cubit.dart';
 import 'package:product_browser_app/features/chat/data/repositories/chat_repository_impl.dart';
-import 'package:product_browser_app/features/chat/data/repositories/user_repository_impl.dart';
 import 'package:product_browser_app/features/chat/domain/repositories/chat_repository.dart';
-import 'package:product_browser_app/features/chat/domain/repositories/user_repository.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/get_older_messages_use_case.dart';
-import 'package:product_browser_app/features/chat/domain/usecases/get_or_generate_username_usecase.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/send_message_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_message_count_use_case.dart';
 import 'package:product_browser_app/features/chat/domain/usecases/watch_messages_use_case.dart';
@@ -27,6 +25,14 @@ import 'package:product_browser_app/features/product/data/product_repository_imp
 import 'package:product_browser_app/features/product/domain/repositories/product_repository.dart';
 import 'package:product_browser_app/features/product/domain/usecases/get_products_by_category_use_case.dart';
 import 'package:product_browser_app/features/product/presentation/bloc/product_bloc.dart';
+import 'package:product_browser_app/features/auth/data/repo/auth_repository_impl.dart';
+import 'package:product_browser_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
+import 'package:product_browser_app/features/auth/domain/repo/auth_repository.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/login_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/logout_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/register_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/update_profile_use_case.dart';
+import 'package:product_browser_app/features/auth/domain/usecases/watch_auth_state_use_case.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -37,6 +43,8 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
   );
+  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+
   final sharedPref = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPref);
 
@@ -83,18 +91,14 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton<ChatRepository>(
     () => ChatRepositoryImpl(firestore: getIt()),
   );
-  getIt.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(sharedPref: getIt()),
-  );
+
   getIt.registerLazySingleton(
     () => WatchMessagesUseCase(chatRepository: getIt()),
   );
   getIt.registerLazySingleton(
     () => SendMessageUseCase(chatRepository: getIt()),
   );
-  getIt.registerLazySingleton(
-    () => GetOrGenerateUsernameUsecase(userRepository: getIt()),
-  );
+
   getIt.registerLazySingleton(
     () => GetOlderMessagesUseCase(chatRepository: getIt()),
   );
@@ -102,7 +106,6 @@ Future<void> setupLocator() async {
     () => ChatBloc(
       watchMessages: getIt(),
       sendMessage: getIt(),
-      getOrGenerateUsername: getIt(),
       getOlderMessages: getIt(),
     ),
   );
@@ -110,4 +113,27 @@ Future<void> setupLocator() async {
     () => WatchMessageCountUseCase(getIt<ChatRepository>()),
   );
   getIt.registerFactory(() => MessageCounterCubit(watchMessageCount: getIt()));
+
+  // Auth
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(auth: getIt()),
+  );
+  getIt.registerLazySingleton(() => LoginUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(() => RegisterUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(() => LogoutUseCase(authRepository: getIt()));
+  getIt.registerLazySingleton(
+    () => UpdateProfileUseCase(authRepository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => WatchAuthStateUseCase(authRepository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => AuthBloc(
+      watchAuthState: getIt(),
+      login: getIt(),
+      register: getIt(),
+      logout: getIt(),
+      updateProfile: getIt(),
+    ),
+  );
 }

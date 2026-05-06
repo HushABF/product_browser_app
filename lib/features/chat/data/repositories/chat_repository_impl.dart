@@ -46,6 +46,7 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, void>> sendMessage({
     required String productId,
     required String senderUsername,
+    required String senderId,
     required String text,
   }) async {
     try {
@@ -56,6 +57,7 @@ class ChatRepositoryImpl implements ChatRepository {
           .add({
             'productId': productId,
             'senderUsername': senderUsername,
+            'senderId': senderId,
             'text': text,
             'createdAt': FieldValue.serverTimestamp(),
           });

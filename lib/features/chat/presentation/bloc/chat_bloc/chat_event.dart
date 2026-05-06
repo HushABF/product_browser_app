@@ -9,10 +9,16 @@ sealed class ChatEvent extends Equatable {
 
 final class WatchMessages extends ChatEvent {
   final String productId;
-  const WatchMessages({required this.productId});
+  final String currentUserId;
+  final String currentUsername;
+  const WatchMessages({
+    required this.productId,
+    required this.currentUserId,
+    required this.currentUsername,
+  });
 
   @override
-  List<Object> get props => [productId];
+  List<Object> get props => [productId, currentUserId, currentUsername];
 }
 
 final class SendMessage extends ChatEvent {
@@ -37,6 +43,8 @@ final class _StreamError extends ChatEvent {
   final String errorMessage;
 
   const _StreamError({required this.errorMessage});
+  @override
+  List<Object> get props => [errorMessage];
 }
 
 final class LoadMoreMessages extends ChatEvent {

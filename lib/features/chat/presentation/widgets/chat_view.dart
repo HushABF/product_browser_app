@@ -77,8 +77,7 @@ class _ChatViewState extends State<ChatView> {
                     state.messages.isNotEmpty &&
                     !state.isLoadingMore &&
                     _justSent &&
-                    state.messages.first.senderUsername ==
-                        state.currentUsername) {
+                    state.messages.first.senderId == state.currentUserId) {
                   _justSent = false;
                   WidgetsBinding.instance.addPostFrameCallback(
                     (_) => _scrollToBottom(),

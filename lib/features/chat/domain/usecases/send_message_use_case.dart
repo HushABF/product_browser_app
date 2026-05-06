@@ -10,12 +10,14 @@ class SendMessageUseCase {
   Future<Either<Failure, void>> call({
     required String productId,
     required String senderUsername,
+    required String senderId,
     required String text,
   }) {
     return chatRepository.sendMessage(
       productId: productId,
       senderUsername: senderUsername,
       text: text,
+      senderId: senderId,
     );
   }
 }

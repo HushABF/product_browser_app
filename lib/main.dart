@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/di/service_locator.dart';
 import 'package:product_browser_app/core/routes/app_router.dart';
+import 'package:product_browser_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:product_browser_app/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:product_browser_app/firebase_options.dart';
 
@@ -21,6 +22,7 @@ class ProductBrowserApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CartCubit>(create: (_) => getIt<CartCubit>()),
+        BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

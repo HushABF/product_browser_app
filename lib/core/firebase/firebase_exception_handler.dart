@@ -23,4 +23,18 @@ class FirebaseExceptionHandler {
         );
     }
   }
+
+  static Failure handleFirebaseAuthException(FirebaseException e) {
+    return switch (e.code) {
+      'email-already-in-use' => const EmailAlreadyInUseFailure(),
+      'weak-password' => const WeakPasswordFailure(),
+      'invalid-email' => const InvalidEmailFailure(),
+      'invalid-credential' => const InvalidCredentialsFailure(),
+      'user-disabled' => const UserDisabledFailure(),
+      'too-many-requests' => const TooManyRequestsFailure(),
+      'requires-recent-login' => const ReauthRequiredFailure(),
+      'network-request-failed' => const FirebaseNetworkFailure(),
+      _ => FirebaseUnknownFailure(e.message ?? 'Unknown auth error.'),
+    };
+  }
 }

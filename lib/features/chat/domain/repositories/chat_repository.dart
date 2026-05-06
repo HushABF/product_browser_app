@@ -7,6 +7,7 @@ abstract class ChatRepository {
   Future<Either<Failure, void>> sendMessage({
     required String productId,
     required String senderUsername,
+    required String senderId,
     required String text,
   });
 
