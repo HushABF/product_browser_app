@@ -37,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: BlocConsumer<AuthBloc, AuthState>(
+            child: BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -47,22 +47,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   );
                 }
               },
-              builder: (context, state) {
-                final isLoading = state is AuthLoading;
-                return Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text('Product Browser', style: textTheme.titleLarge),
-                    SizedBox(height: 64),
-                    EmailAndPasswordAndUsernameForm(
-                      formKey: _formKey,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                      usernameController: _usernameController,
-                    ),
-                    SizedBox(height: 32),
-
-                    AppTextButton(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Product Browser', style: textTheme.titleLarge),
+                  SizedBox(height: 64),
+                  EmailAndPasswordAndUsernameForm(
+                    formKey: _formKey,
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                    usernameController: _usernameController,
+                  ),
+                  SizedBox(height: 32),
+                  BlocSelector<AuthBloc, AuthState, bool>(
+                    selector: (state) => state is AuthLoading,
+                    builder: (context, isLoading) => AppTextButton(
                       buttonText: 'Create Account',
                       textStyle: textTheme.bodyMedium!.copyWith(
                         color: Colors.white,
@@ -86,11 +85,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               );
                             },
                     ),
-                    SizedBox(height: 18),
-                    AlreadyHaveAccountText(),
-                  ],
-                );
-              },
+                  ),
+                  SizedBox(height: 18),
+                  AlreadyHaveAccountText(),
+                ],
+              ),
             ),
           ),
         ),

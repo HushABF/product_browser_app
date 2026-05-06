@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: BlocConsumer<AuthBloc, AuthState>(
+            child: BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -44,25 +44,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
               },
-              builder: (context, state) {
-                final isLoading = state is AuthLoading;
-                return Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Center(
-                      child: Text(
-                        'Product Browser',
-                        style: textTheme.titleLarge,
-                      ),
-                    ),
-                    SizedBox(height: 64),
-                    EmailAndPasswordForm(
-                      formKey: _formKey,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                    ),
-                    SizedBox(height: 32),
-                    AppTextButton(
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Center(
+                    child: Text('Product Browser', style: textTheme.titleLarge),
+                  ),
+                  SizedBox(height: 64),
+                  EmailAndPasswordForm(
+                    formKey: _formKey,
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                  ),
+                  SizedBox(height: 32),
+                  BlocSelector<AuthBloc, AuthState, bool>(
+                    selector: (state) => state is AuthLoading,
+                    builder: (context, isLoading) => AppTextButton(
                       buttonText: 'Sign in',
                       textStyle: textTheme.bodyMedium!.copyWith(
                         color: Colors.white,
@@ -84,11 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             },
                     ),
-                    SizedBox(height: 18),
-                    DontHaveAccountText(),
-                  ],
-                );
-              },
+                  ),
+                  SizedBox(height: 18),
+                  DontHaveAccountText(),
+                ],
+              ),
             ),
           ),
         ),
