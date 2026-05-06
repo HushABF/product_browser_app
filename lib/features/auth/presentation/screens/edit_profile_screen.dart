@@ -56,10 +56,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: BlocConsumer<AuthBloc, AuthState>(
               listenWhen: (previous, current) =>
-                  current is AuthFailure ||
+                  current is AuthUpdatingFailure ||
                   (previous is AuthUpdating && current is AuthAuthenticated),
               listener: (context, state) {
-                if (state is AuthFailure) {
+                if (state is AuthUpdatingFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(FailureToMessage.messageFor(state.failure)),
