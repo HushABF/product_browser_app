@@ -71,6 +71,7 @@ void main() {
         ),
       );
       //emit once before close
+      await Future.delayed(Duration(milliseconds: 50));
       controller.add([]);
 
       await Future.delayed(Duration(milliseconds: 50));
