@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:product_browser_app/core/utils/validators.dart';
 import 'package:product_browser_app/core/widgets/app_text_field.dart';
 
@@ -31,18 +32,26 @@ class _EmailAndPasswordAndUsernameFormState
   Widget build(BuildContext context) {
     return Form(
       key: widget._formKey,
-
       child: Column(
         children: [
           AppTextFormField(
+            controller: widget._usernameController,
+            hintText: 'Username',
+            label: 'Name',
+            validator: Validators.validateUsername,
+          ),
+          SizedBox(height: 20.h),
+          AppTextFormField(
             controller: widget._emailController,
             hintText: 'Email',
+            label: 'Email',
             validator: Validators.validateEmail,
           ),
-          SizedBox(height: 32),
+          SizedBox(height: 20.h),
           AppTextFormField(
             controller: widget._passwordController,
             hintText: 'Password',
+            label: 'Password',
             isObscureText: isObscureText,
             suffixIcon: GestureDetector(
               onTap: () {
@@ -55,12 +64,6 @@ class _EmailAndPasswordAndUsernameFormState
               ),
             ),
             validator: Validators.validatePassword,
-          ),
-          SizedBox(height: 32),
-          AppTextFormField(
-            controller: widget._usernameController,
-            hintText: 'Username',
-            validator: Validators.validateUsername,
           ),
         ],
       ),
