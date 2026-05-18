@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:product_browser_app/core/theming/colors.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 
 class ChatInputBar extends StatefulWidget {
@@ -37,41 +40,58 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: SafeArea(
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    maxLength: 500,
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: 'Write a message…',
-                      filled: true,
-                      fillColor: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.w, 8.h, 8.w, 8.h),
+      decoration: BoxDecoration(
+        color: ColorsManager.backgroundWhite,
+        border: Border(top: BorderSide(color: ColorsManager.moreLightGray)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                maxLength: 500,
+                controller: _controller,
+                decoration: InputDecoration(
+                  counterText: '',
+                  hintText: 'Write a message…',
+                  hintStyle: TextStyles.font15GrayRegular.copyWith(
+                    color: ColorsManager.lightGray,
+                  ),
+                  filled: true,
+                  fillColor: ColorsManager.moreLighterGray,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 10.h,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24.r),
+                    borderSide: BorderSide.none,
                   ),
                 ),
-                IconButton.filled(onPressed: _send, icon: const Icon(Icons.send)),
-              ],
+                style: TextStyles.font15GrayRegular.copyWith(
+                  color: ColorsManager.darkBlue,
+                ),
+              ),
             ),
-          ),
+            SizedBox(width: 8.w),
+            GestureDetector(
+              onTap: _send,
+              child: Container(
+                width: 40.w,
+                height: 40.w,
+                decoration: BoxDecoration(
+                  color: ColorsManager.mainIndigo,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.send, color: Colors.white, size: 18.sp),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

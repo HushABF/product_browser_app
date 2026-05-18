@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:product_browser_app/features/chat/presentation/widgets/message_bubble.dart';
 
@@ -17,6 +18,7 @@ class ChatMessageList extends StatelessWidget {
     return ListView.builder(
       reverse: true,
       controller: scrollController,
+      padding: EdgeInsets.symmetric(vertical: 8.h),
       itemCount: state.isLoadingMore
           ? state.messages.length + 1
           : state.messages.length,
