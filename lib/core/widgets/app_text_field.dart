@@ -43,9 +43,7 @@ class AppTextFormField extends StatelessWidget {
           Text(label!.toUpperCase(), style: TextStyles.font11LightGraySemiBold),
           SizedBox(height: 6.h),
         ],
-        SizedBox(
-          height: 48.h,
-          child: TextFormField(
+        TextFormField(
             controller: controller,
             decoration: InputDecoration(
               isDense: true,
@@ -98,7 +96,6 @@ class AppTextFormField extends StatelessWidget {
                 ),
             validator: (value) => validator(value),
           ),
-        ),
       ],
     );
   }
