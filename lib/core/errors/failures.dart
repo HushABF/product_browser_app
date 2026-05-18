@@ -8,6 +8,10 @@ sealed class Failure extends Equatable {
   List<Object?> get props => [message];
 }
 
+class ValidationFailure extends Failure {
+  const ValidationFailure() : super('Email and Password must not be empty');
+}
+
 class NetworkTimeoutFailure extends Failure {
   const NetworkTimeoutFailure()
     : super('Connection timed out. Please check your internet.');

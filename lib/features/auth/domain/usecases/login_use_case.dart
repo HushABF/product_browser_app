@@ -12,6 +12,9 @@ class LoginUseCase {
     required String email,
     required String password,
   }) {
+    if (email.isEmpty || password.isEmpty) {
+      return Future.value(Left(ValidationFailure()));
+    }
     return authRepository.loginWithEmailAndPassword(email, password);
   }
 }
