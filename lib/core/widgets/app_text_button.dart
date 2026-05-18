@@ -1,48 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:product_browser_app/core/theming/colors.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
 
 class AppTextButton extends StatelessWidget {
-  final double? borderRadius;
+  final String buttonText;
+  final VoidCallback? onPressed;
   final Color? backgroundColor;
-  final double? horizontalPadding;
-  final double? verticalPadding;
+  final TextStyle? textStyle;
+  final double? borderRadius;
   final double? buttonWidth;
   final double? buttonHeight;
-  final String buttonText;
-  final TextStyle textStyle;
-  final Function()? onPressed;
+
   const AppTextButton({
     super.key,
-    this.borderRadius,
-    this.backgroundColor,
-    this.horizontalPadding,
-    this.verticalPadding,
-    this.buttonHeight,
-    this.buttonWidth,
     required this.buttonText,
-    required this.textStyle,
     required this.onPressed,
+    this.backgroundColor,
+    this.textStyle,
+    this.borderRadius,
+    this.buttonWidth,
+    this.buttonHeight,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius ?? 16.0),
+            borderRadius: BorderRadius.circular(borderRadius ?? 8.r),
           ),
         ),
-        backgroundColor: WidgetStatePropertyAll(backgroundColor ?? Colors.blue),
-        padding: WidgetStateProperty.all<EdgeInsets>(
-          EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        backgroundColor: WidgetStateProperty.all(
+          backgroundColor ?? ColorsManager.mainIndigo,
+        ),
+        padding: WidgetStateProperty.all(
+          EdgeInsets.symmetric(horizontal: 16.w),
         ),
         fixedSize: WidgetStateProperty.all(
-          Size(buttonWidth ?? double.maxFinite, buttonHeight ?? 50),
+          Size(buttonWidth ?? double.maxFinite, buttonHeight ?? 44.h),
         ),
       ),
       onPressed: onPressed,
-      child: Text(buttonText, style: textStyle),
-      
+      child: Text(
+        buttonText,
+        style: textStyle ??
+            TextStyles.font14DarkBlueSemiBold.copyWith(color: Colors.white),
+      ),
     );
   }
 }

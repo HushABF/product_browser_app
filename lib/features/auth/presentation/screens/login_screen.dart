@@ -61,9 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     selector: (state) => state is AuthLoading,
                     builder: (context, isLoading) => AppTextButton(
                       buttonText: 'Sign in',
-                      textStyle: textTheme.bodyMedium!.copyWith(
-                        color: Colors.white,
-                      ),
                       onPressed: isLoading
                           ? null
                           : () {

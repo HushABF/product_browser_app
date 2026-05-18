@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_browser_app/core/utils/failure_to_message.dart';
 import 'package:product_browser_app/core/utils/validators.dart';
+import 'package:product_browser_app/core/theming/colors.dart';
 import 'package:product_browser_app/core/widgets/app_text_button.dart';
 import 'package:product_browser_app/core/widgets/app_text_field.dart';
 import 'package:product_browser_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
@@ -97,9 +98,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(height: 32),
                     AppTextButton(
                       buttonText: 'Save',
-                      textStyle: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium!.copyWith(color: Colors.white),
                       onPressed: (_canSave && !isUpdating)
                           ? () {
                               if (!(_formKey.currentState?.validate() ??
@@ -119,9 +117,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(height: 32),
                     AppTextButton(
                       buttonText: 'Logout',
-                      textStyle: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                      backgroundColor: ColorsManager.error,
                       onPressed: isUpdating
                           ? null
                           : () {

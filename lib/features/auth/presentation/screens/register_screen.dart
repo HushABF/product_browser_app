@@ -63,9 +63,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     selector: (state) => state is AuthLoading,
                     builder: (context, isLoading) => AppTextButton(
                       buttonText: 'Create Account',
-                      textStyle: textTheme.bodyMedium!.copyWith(
-                        color: Colors.white,
-                      ),
                       onPressed: isLoading
                           ? null
                           : () {
