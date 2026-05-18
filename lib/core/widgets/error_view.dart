@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:product_browser_app/core/theming/colors.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
+import 'package:product_browser_app/core/widgets/app_text_button.dart';
 
-/// A reusable error state widget with message and an optional retry action.
-///
-/// Extend the app's aesthetic to the error path — same visual language as
-/// the primary content.
 class ErrorView extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
@@ -12,51 +12,43 @@ class ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+        padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 32.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: colorScheme.errorContainer,
+              width: 80.w,
+              height: 80.w,
+              decoration: const BoxDecoration(
+                color: ColorsManager.moreLighterGray,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.wifi_off_rounded,
-                size: 40,
-                color: colorScheme.onErrorContainer,
+                size: 40.sp,
+                color: ColorsManager.error,
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
             Text(
               'Something went wrong',
-              style: textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyles.font22DarkBlueBold,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               message,
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
-                height: 1.5,
-              ),
+              style: TextStyles.font13GrayRegular,
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
-              const SizedBox(height: 28),
-              FilledButton.icon(
+              SizedBox(height: 28.h),
+              AppTextButton(
+                buttonText: 'Try Again',
                 onPressed: onRetry,
-                icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Try Again'),
+                buttonWidth: 160.w,
               ),
             ],
           ],

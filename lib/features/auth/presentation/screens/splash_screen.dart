@@ -50,10 +50,10 @@ class SplashScreen extends StatelessWidget {
               width: 200.w,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2.r),
-                child: const LinearProgressIndicator(
-                  backgroundColor: Color(0xFF2A2730),
+                child: LinearProgressIndicator(
+                  backgroundColor: const Color(0xFF2A2730),
                   color: ColorsManager.mainIndigo,
-                  minHeight: 3,
+                  minHeight: 3.h,
                 ),
               ),
             ),

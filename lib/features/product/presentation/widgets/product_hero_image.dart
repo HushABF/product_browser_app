@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:product_browser_app/core/theming/colors.dart';
 
 class ProductHeroImage extends StatelessWidget {
@@ -15,11 +16,11 @@ class ProductHeroImage extends StatelessWidget {
         fit: BoxFit.cover,
         placeholder: (_, _) => Container(
           color: ColorsManager.moreLighterGray,
-          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+          child: Center(child: CircularProgressIndicator(strokeWidth: 2.w)),
         ),
         errorWidget: (_, _, _) => Container(
           color: ColorsManager.moreLighterGray,
-          child: const Icon(Icons.broken_image, size: 48),
+          child: Icon(Icons.broken_image, size: 48.sp),
         ),
       ),
     );
