@@ -11,10 +11,7 @@ class CartItemsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-        return CartItemListTile(item: item);
-      },
+      itemBuilder: (context, index) => CartItemListTile(item: items[index]),
     );
   }
 }

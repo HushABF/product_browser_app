@@ -1,85 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
 import 'package:product_browser_app/features/category/domain/entities/category_entity.dart';
 
-/// A grid card representing a single product category.
-///
-/// Derives a unique accent color from the slug so every category tile
-/// has its own visual identity without needing per-category assets.
 class CategoryCard extends StatelessWidget {
   final CategoryEntity category;
   final VoidCallback onTap;
 
   const CategoryCard({super.key, required this.category, required this.onTap});
 
-  ///generates a unique color for each category card based on the category's slug string.
   static Color accentFromSlug(String slug) {
     final hue = (slug.codeUnits.fold(0, (a, b) => a + b) % 360).toDouble();
-    return HSLColor.fromAHSL(1.0, hue, 0.50, 0.52).toColor();
+    return HSLColor.fromAHSL(1.0, hue, 0.65, 0.55).toColor();
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final accent = accentFromSlug(category.slug);
-    final initial = category.name[0].toUpperCase();
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: accent,
+          borderRadius: BorderRadius.circular(12.r),
         ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                accent.withValues(alpha: 0.08),
-                accent.withValues(alpha: 0.22),
-              ],
-            ),
+        alignment: Alignment.bottomLeft,
+        padding: EdgeInsets.all(16.w),
+        child: Text(
+          category.name,
+          style: TextStyles.font17DarkBlueSemiBold.copyWith(
+            color: Colors.white,
           ),
-          padding: const EdgeInsets.fromLTRB(14, 12, 12, 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.20),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  initial,
-                  style: textTheme.titleMedium!.copyWith(
-                    fontWeight: .w700,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              FittedBox(
-                fit: .scaleDown,
-                child: Text(
-                  category.name,
-                  style: textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface,
-                    height: 1.2,
-                  ),
-                  maxLines: 1,
-                ),
-              ),
-            ],
-          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

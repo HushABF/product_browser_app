@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:product_browser_app/core/theming/colors.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
 import 'package:product_browser_app/core/utils/failure_to_message.dart';
 import 'package:product_browser_app/core/utils/validators.dart';
 import 'package:product_browser_app/core/widgets/app_text_button.dart';
@@ -49,92 +52,143 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: BlocConsumer<AuthBloc, AuthState>(
-              listenWhen: (previous, current) =>
-                  current is AuthUpdatingFailure ||
-                  (previous is AuthUpdating && current is AuthAuthenticated),
-              listener: (context, state) {
-                if (state is AuthUpdatingFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(FailureToMessage.messageFor(state.failure)),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Profile updated.')),
-                  );
-                }
-              },
-              builder: (context, state) {
-                final bool isUpdating = state is AuthUpdating;
-                return Column(
-                  crossAxisAlignment: .center,
-                  children: [
-                    CircleAvatar(
-                      radius: 48,
-                      backgroundImage: _photoUrl != null
-                          ? NetworkImage(_photoUrl)
-                          : null,
-                      child: _photoUrl == null
-                          ? const Icon(Icons.person)
-                          : null,
-                    ),
-                    SizedBox(height: 32),
-                    Form(
-                      key: _formKey,
-                      child: AppTextFormField(
-                        controller: _usernameController,
-                        hintText: 'Enter a new username',
-                        validator: Validators.validateUsername,
-                      ),
-                    ),
-                    SizedBox(height: 32),
-                    AppTextButton(
-                      buttonText: 'Save',
-                      textStyle: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium!.copyWith(color: Colors.white),
-                      onPressed: (_canSave && !isUpdating)
-                          ? () {
-                              if (!(_formKey.currentState?.validate() ??
-                                  false)) {
-                                return;
-                              }
-                              final username = _usernameController.text.trim();
-                              context.read<AuthBloc>().add(
-                                ProfileUpdateRequested(
-                                  username: username,
-                                  photoUrl: _photoUrl,
-                                ),
-                              );
-                            }
-                          : null,
-                    ),
-                    SizedBox(height: 32),
-                    AppTextButton(
-                      buttonText: 'Logout',
-                      textStyle: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium!.copyWith(color: Colors.white),
-                      onPressed: isUpdating
-                          ? null
-                          : () {
-                              context.read<AuthBloc>().add(LogoutRequested());
-                            },
-                    ),
-                  ],
+      appBar: AppBar(
+        title: Text('Edit Profile', style: TextStyles.font17DarkBlueSemiBold),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listenWhen: (previous, current) =>
+                current is AuthUpdatingFailure ||
+                (previous is AuthUpdating && current is AuthAuthenticated),
+            listener: (context, state) {
+              if (state is AuthUpdatingFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(FailureToMessage.messageFor(state.failure)),
+                  ),
                 );
-              },
-            ),
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Profile updated.')),
+                );
+              }
+            },
+            builder: (context, state) {
+              final bool isUpdating = state is AuthUpdating;
+              return Column(
+                children: [
+                  SizedBox(height: 16.h),
+                  _ProfileAvatar(
+                    photoUrl: _photoUrl,
+                    username: _initialUsername,
+                  ),
+                  SizedBox(height: 32.h),
+                  Form(
+                    key: _formKey,
+                    child: AppTextFormField(
+                      controller: _usernameController,
+                      hintText: 'Enter a new username',
+                      label: 'Username',
+                      validator: Validators.validateUsername,
+                    ),
+                  ),
+                  SizedBox(height: 32.h),
+                  AppTextButton(
+                    buttonText: 'Save',
+                    onPressed: (_canSave && !isUpdating)
+                        ? () {
+                            if (!(_formKey.currentState?.validate() ?? false)) {
+                              return;
+                            }
+                            final username = _usernameController.text.trim();
+                            context.read<AuthBloc>().add(
+                              ProfileUpdateRequested(
+                                username: username,
+                                photoUrl: _photoUrl,
+                              ),
+                            );
+                          }
+                        : null,
+                  ),
+                  SizedBox(height: 16.h),
+                  AppTextButton(
+                    buttonText: 'Logout',
+                    backgroundColor: ColorsManager.error,
+                    onPressed: isUpdating
+                        ? null
+                        : () {
+                            context.read<AuthBloc>().add(LogoutRequested());
+                          },
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  final String? photoUrl;
+  final String username;
+
+  const _ProfileAvatar({required this.photoUrl, required this.username});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          width: 96.w,
+          height: 96.w,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [ColorsManager.mainIndigo, ColorsManager.darkIndigo],
+            ),
+            image: photoUrl != null
+                ? DecorationImage(
+                    image: NetworkImage(photoUrl!),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+          ),
+          child: photoUrl == null
+              ? Center(
+                  child: Text(
+                    username.isNotEmpty ? username[0].toUpperCase() : '?',
+                    style: TextStyles.font28DarkBlueBold.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : null,
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Container(
+            width: 32.w,
+            height: 32.w,
+            decoration: BoxDecoration(
+              color: ColorsManager.backgroundWhite,
+              shape: BoxShape.circle,
+              border: Border.all(color: ColorsManager.moreLightGray),
+            ),
+            child: Icon(
+              Icons.camera_alt_outlined,
+              size: 16.sp,
+              color: ColorsManager.gray,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:product_browser_app/core/theming/colors.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 
 class ProductCard extends StatelessWidget {
@@ -10,18 +13,15 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: ColorsManager.backgroundWhite,
+          border: Border.all(color: ColorsManager.moreLightGray),
+          borderRadius: BorderRadius.circular(12.r),
         ),
-      ),
-      child: InkWell(
-        onTap: onTap,
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -31,36 +31,33 @@ class ProductCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 width: double.infinity,
                 placeholder: (_, _) => Container(
-                  color: colorScheme.surfaceContainerHighest,
+                  color: ColorsManager.moreLighterGray,
                   child: const Center(
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
                 errorWidget: (_, _, _) => Container(
-                  color: colorScheme.surfaceContainerHighest,
+                  color: ColorsManager.moreLighterGray,
                   child: const Icon(Icons.broken_image),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     product.title,
-                    style: textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyles.font14DarkBlueSemiBold,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                   Text(
                     '\$${product.price.toStringAsFixed(2)}',
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w700,
+                    style: TextStyles.font17DarkBlueSemiBoldMono.copyWith(
+                      color: ColorsManager.mainIndigo,
                     ),
                   ),
                 ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
 import 'package:product_browser_app/features/product/domain/entities/product_entity.dart';
 import 'package:product_browser_app/features/product/presentation/widgets/product_card.dart';
 
@@ -16,16 +18,18 @@ class ProductGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (products.isEmpty) {
-      return const Center(child: Text('No products found'));
+      return Center(
+        child: Text('No products found', style: TextStyles.font15GrayRegular),
+      );
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 0.72,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisSpacing: 12.w,
+        mainAxisSpacing: 12.h,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {

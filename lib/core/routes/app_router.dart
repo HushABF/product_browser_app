@@ -22,8 +22,11 @@ final appRouter = GoRouter(
     final currentLocation = state.matchedLocation;
     const authOnlyRoutes = {'/login', '/register', '/splash'};
 
-    if (authState is AuthInitial || authState is AuthLoading) {
+    if (authState is AuthInitial) {
       return currentLocation == '/splash' ? null : '/splash';
+    }
+    if (authState is AuthLoading || authState is AuthFailure) {
+      return null;
     }
     if (authState is AuthUnauthenticated) {
       return (currentLocation == '/login' || currentLocation == '/register')

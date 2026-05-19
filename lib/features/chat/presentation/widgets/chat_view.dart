@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:product_browser_app/core/theming/styles.dart';
 import 'package:product_browser_app/core/widgets/error_view.dart';
 import 'package:product_browser_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:product_browser_app/features/chat/presentation/widgets/chat_input_bar.dart';
@@ -58,13 +59,11 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.product.title,
-          style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
+          style: TextStyles.font17DarkBlueSemiBold,
         ),
       ),
       body: Column(
